@@ -1,35 +1,32 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { useEffect, useState } from 'react'
+import { Layout } from './components/layout/Layout'
+import { ServersPage } from './pages/ServersPage'
+import { useProjectStore } from './stores/project.store'
+import { useServerStore } from './stores/server.store'
 
-function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+export default function App() {
+  const [activeSection, setActiveSection] = useState('servers')
+  const { loadProjects, activeProjectId } = useProjectStore()
+  const { loadServers, servers } = useServerStore()
+
+  useEffect(() => { loadProjects() }, [])
+
+  useEffect(() => {
+    if (activeProjectId) loadServers(activeProjectId)
+  }, [activeProjectId])
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
+    <Layout
+      activeSection={activeSection}
+      onSectionChange={setActiveSection}
+      serverCount={servers.length}
+    >
+      {activeSection === 'servers' && <ServersPage />}
+      {activeSection !== 'servers' && (
+        <div className="flex-1 flex items-center justify-center text-text-3 text-sm">
+          {activeSection} — kommt in v2
         </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+      )}
+    </Layout>
   )
 }
-
-export default App
