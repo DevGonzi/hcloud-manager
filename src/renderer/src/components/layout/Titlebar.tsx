@@ -132,23 +132,23 @@ export function Titlebar() {
 
       <div style={{ flex: 1 }} />
 
-      <IconButton
-        onClick={() => window.hcloud.appconfig.lock()}
-        title="Lock (Strg+L)"
-      >
-        <Lock size={14} strokeWidth={1.5} />
-      </IconButton>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
+        <IconButton
+          onClick={() => window.hcloud.appconfig.lock()}
+          title="Lock (Strg+L)"
+        >
+          <Lock size={14} strokeWidth={1.5} />
+        </IconButton>
 
-      <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
         <ProjectSwitcher />
-      </div>
 
-      <IconButton
-        onClick={() => activeProjectId && loadServers(activeProjectId)}
-        title={t('common.refresh')}
-      >
-        <RotateCw size={13} />
-      </IconButton>
+        <IconButton
+          onClick={() => activeProjectId && loadServers(activeProjectId)}
+          title={t('common.refresh')}
+        >
+          <RotateCw size={13} />
+        </IconButton>
+      </div>
 
       {process.platform !== 'darwin' && (
         <div
