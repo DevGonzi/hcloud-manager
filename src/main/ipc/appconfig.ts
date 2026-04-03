@@ -1,5 +1,7 @@
 import { ipcMain } from 'electron'
 import { appConfig } from '../appconfig'
+import { getMainWindow } from '../index'
+import { actionLog } from '../actionlog'
 import type { ProjectStorage } from '../storage'
 import type { IpcResult } from '../../shared/types'
 
@@ -15,6 +17,12 @@ export function registerAppConfigHandlers(storage: ProjectStorage) {
   ipcMain.handle('appconfig:setPin', async (_e, newPin: string): Promise<IpcResult<void>> => {
     try {
       await appConfig.setPin(newPin)
+      appConfig.setLocked(true)
+      // Notify renderer that PIN is now set
+      const win = getMainWindow()
+      if (win && !win.isDestroyed()) {
+        win.webContents.send('app:pinSet')
+      }
       return { success: true, data: undefined }
     } catch (e) {
       return { success: false, error: String(e) }
@@ -56,9 +64,10 @@ export function registerAppConfigHandlers(storage: ProjectStorage) {
     }
   })
 
-  ipcMain.handle('appconfig:lock', (): IpcResult<void> => {
+  ipcMain.handle('appconfig:lock', (event): IpcResult<void> => {
     try {
       appConfig.setLocked(true)
+      event.sender.send('app:lock')
       return { success: true, data: undefined }
     } catch (e) {
       return { success: false, error: String(e) }
@@ -85,7 +94,16 @@ export function registerAppConfigHandlers(storage: ProjectStorage) {
   ipcMain.handle('appconfig:resetPin', (): IpcResult<void> => {
     try {
       appConfig.clearPin()
-      storage.removeAllProjects()
+      storage.deleteStorageFile()
+      actionLog.clear()
+      appConfig.setLocked(false)
+
+      // Notify renderer to clear state and reload
+      const win = getMainWindow()
+      if (win && !win.isDestroyed()) {
+        win.webContents.send('app:reset')
+      }
+
       return { success: true, data: undefined }
     } catch (e) {
       return { success: false, error: String(e) }
