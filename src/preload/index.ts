@@ -69,6 +69,20 @@ const hcloud: HCloudApi = {
       ipcRenderer.on('actionlog:entry', (_e, entry) => cb(entry))
     }
   },
+  appconfig: {
+    getHasPinSet: () => ipcRenderer.invoke('appconfig:getHasPinSet'),
+    setPin: (pin: string) => ipcRenderer.invoke('appconfig:setPin', pin),
+    verifyPin: (pin: string) => ipcRenderer.invoke('appconfig:verifyPin', pin),
+    clearPin: () => ipcRenderer.invoke('appconfig:clearPin'),
+    getCacheTtl: () => ipcRenderer.invoke('appconfig:getCacheTtl'),
+    setCacheTtl: (ttl: number) => ipcRenderer.invoke('appconfig:setCacheTtl', ttl),
+    lock: () => ipcRenderer.invoke('appconfig:lock'),
+    unlock: () => ipcRenderer.invoke('appconfig:unlock'),
+    getIsLocked: () => ipcRenderer.invoke('appconfig:getIsLocked'),
+    onLockRequest: (cb: () => void) => {
+      ipcRenderer.on('app:lock', () => cb())
+    }
+  },
   window: {
     minimize: () => ipcRenderer.send('window:minimize'),
     maximize: () => ipcRenderer.send('window:maximize'),

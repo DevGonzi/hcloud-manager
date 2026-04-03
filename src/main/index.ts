@@ -1,10 +1,19 @@
-import { app, BrowserWindow, screen } from 'electron'
+import { app, BrowserWindow, screen, globalShortcut } from 'electron'
 import path from 'path'
 import { ProjectStorage } from './storage'
 import { registerAllHandlers } from './ipc'
 
 let storage: ProjectStorage | null = null
 let mainWindow: BrowserWindow | null = null
+
+function registerGlobalShortcuts() {
+  // Alt+L zum Sperren (Win+L wird von Windows intercepted)
+  globalShortcut.register('Alt+L', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('app:lock')
+    }
+  })
+}
 
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -37,6 +46,7 @@ function createWindow() {
 app.whenReady().then(() => {
   storage = new ProjectStorage()
   registerAllHandlers(storage)
+  registerGlobalShortcuts()
   createWindow()
   app.on('activate', () => {
     if (!mainWindow) createWindow()

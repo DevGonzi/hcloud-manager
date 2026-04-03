@@ -338,6 +338,18 @@ export interface HCloudApi {
     getAll: () => Promise<IpcResult<ActionLogEntry[]>>
     onEntry: (callback: (entry: ActionLogEntry) => void) => void
   }
+  appconfig: {
+    getHasPinSet: () => Promise<IpcResult<boolean>>
+    setPin: (pin: string) => Promise<IpcResult<void>>
+    verifyPin: (pin: string) => Promise<IpcResult<boolean>>
+    clearPin: () => Promise<IpcResult<void>>
+    getCacheTtl: () => Promise<IpcResult<number>>
+    setCacheTtl: (ttl: number) => Promise<IpcResult<void>>
+    lock: () => Promise<IpcResult<void>>
+    unlock: () => Promise<IpcResult<void>>
+    getIsLocked: () => Promise<IpcResult<boolean>>
+    onLockRequest: (callback: () => void) => void
+  }
   window: {
     minimize: () => void
     maximize: () => void

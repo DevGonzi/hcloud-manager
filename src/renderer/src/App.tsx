@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LangProvider } from './i18n'
 import { Layout } from './components/layout/Layout'
+import { LockScreen } from './components/LockScreen'
 import { ServersPage } from './pages/ServersPage'
 import { SnapshotsPage } from './pages/SnapshotsPage'
 import { ImagesPage } from './pages/ImagesPage'
@@ -17,16 +18,43 @@ import { useServerStore } from './stores/server.store'
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('servers')
+  const [locked, setLocked] = useState(true)
+  const [pinIsSet, setPinIsSet] = useState(false)
   const { loadProjects, activeProjectId } = useProjectStore()
   const { loadServers, servers } = useServerStore()
+
+  useEffect(() => {
+    // Check if PIN is set on app start
+    window.hcloud.appconfig.getHasPinSet().then((res) => {
+      if (res.success) {
+        setPinIsSet(res.data)
+        if (!res.data) {
+          setLocked(false)
+        }
+      }
+    })
+
+    // Listen for global lock shortcut (Alt+L)
+    window.hcloud.appconfig.onLockRequest(() => {
+      setLocked(true)
+    })
+  }, [])
 
   useEffect(() => {
     loadProjects()
   }, [])
 
   useEffect(() => {
-    if (activeProjectId) loadServers(activeProjectId)
-  }, [activeProjectId])
+    if (activeProjectId && !locked) loadServers(activeProjectId)
+  }, [activeProjectId, locked])
+
+  if (locked && pinIsSet) {
+    return (
+      <LangProvider>
+        <LockScreen onUnlock={() => setLocked(false)} />
+      </LangProvider>
+    )
+  }
 
   return (
     <LangProvider>

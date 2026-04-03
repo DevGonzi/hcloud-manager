@@ -15,7 +15,8 @@
     "all": "Alle",
     "readonly": "READONLY",
     "resources": "{n} Ressourcen",
-    "noData": "—"
+    "noData": "—",
+    "security": "Sicherheit"
   },
   "nav": {
     "compute": "Compute",
