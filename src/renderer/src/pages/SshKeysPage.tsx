@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useProjectStore } from '../stores/project.store'
 import type { HCloudSshKey } from '../../../shared/types'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 
 function CreateSshKeyDialog({
   projectId,

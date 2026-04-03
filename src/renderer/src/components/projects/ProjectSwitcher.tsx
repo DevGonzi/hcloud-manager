@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useProjectStore } from '../../stores/project.store'
 import { useServerStore } from '../../stores/server.store'
 import { AddProjectDialog } from './AddProjectDialog'
-import { useT } from '../../i18n'
+import { useT } from '../../i18n/useT'
 
 export function ProjectSwitcher() {
   const { t } = useT()

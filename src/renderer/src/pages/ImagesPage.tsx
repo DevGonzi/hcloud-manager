@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useProjectStore } from '../stores/project.store'
 import type { HCloudImage } from '../../../shared/types'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 
 type Filter = 'all' | 'snapshot' | 'backup' | 'system' | 'app'
 

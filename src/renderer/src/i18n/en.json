@@ -281,5 +281,8 @@
     "api": "API",
     "cacheTtl": "Cache TTL (Server)",
     "language": "Language"
+  },
+  "activity": {
+    "title": "Activity log"
   }
 }

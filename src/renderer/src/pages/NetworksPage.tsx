@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useProjectStore } from '../stores/project.store'
 import type { HCloudNetwork } from '../../../shared/types'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 
 function CreateNetworkDialog({
   projectId,

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useProjectStore } from '../../stores/project.store'
-import { useT } from '../../i18n'
+import { useT } from '../../i18n/useT'
 
 interface Props {
   onClose: () => void

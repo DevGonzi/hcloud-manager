@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
+import { LangContext, type Lang } from './context'
 import de from './de.json'
 import en from './en.json'
 
-export type Lang = 'de' | 'en'
+export type { Lang } from './context'
 
 type Translations = typeof de
 
@@ -17,18 +18,6 @@ function resolve(obj: Record<string, unknown>, key: string): string {
   }
   return typeof cur === 'string' ? cur : key
 }
-
-interface LangCtx {
-  lang: Lang
-  setLang: (l: Lang) => void
-  t: (key: string, vars?: Record<string, string | number>) => string
-}
-
-const LangContext = createContext<LangCtx>({
-  lang: 'de',
-  setLang: () => {},
-  t: (key) => key
-})
 
 export function LangProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => {
@@ -53,8 +42,4 @@ export function LangProvider({ children }: { children: ReactNode }) {
   }
 
   return <LangContext.Provider value={{ lang, setLang, t }}>{children}</LangContext.Provider>
-}
-
-export function useT() {
-  return useContext(LangContext)
 }

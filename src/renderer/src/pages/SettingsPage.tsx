@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useProjectStore } from '../stores/project.store'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 
 const card: React.CSSProperties = {
   background: 'var(--bg3)',
@@ -30,6 +30,17 @@ export function SettingsPage() {
   const { projects, activeProjectId, removeProject, setActiveProject } = useProjectStore()
   const activeProject = projects.find((p) => p.id === activeProjectId)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [hasPinSet, setHasPinSet] = useState(false)
+  const [showPinForm, setShowPinForm] = useState(false)
+  const [newPin, setNewPin] = useState('')
+  const [confirmPin, setConfirmPin] = useState('')
+  const [oldPin, setOldPin] = useState('')
+
+  useEffect(() => {
+    window.hcloud.appconfig.getHasPinSet().then((res) => {
+      if (res.success) setHasPinSet(res.data)
+    })
+  }, [])
 
   async function handleRemoveProject(id: string) {
     await removeProject(id)
@@ -355,7 +366,189 @@ export function SettingsPage() {
                 {i < arr.length - 1 && <div style={divider} />}
               </div>
             ))}
+            <div style={divider} />
+            <div style={{ padding: '6px 0', fontSize: 11, color: 'var(--tx3)' }}>
+              Made with ❤️ by DevGonzi from Gonzi.Tech
+            </div>
           </div>
+        </section>
+
+        {/* PIN Protection */}
+        <section>
+          <div style={sectionLabel}>🔒 PIN {t('common.security') || 'Schutz'}</div>
+          {!showPinForm && (
+            <div style={card}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <span style={{ fontSize: 12, color: 'var(--tx2)' }}>
+                  PIN ist {hasPinSet ? '✅ aktiv' : '❌ inaktiv'}
+                </span>
+                <button
+                  onClick={() => setShowPinForm(true)}
+                  style={{
+                    padding: '5px 12px',
+                    fontSize: 11,
+                    border: '1px solid var(--bdr)',
+                    borderRadius: 4,
+                    color: 'var(--tx2)',
+                    background: 'none',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    ;(e.target as HTMLElement).style.borderColor = 'var(--bdr2)'
+                    ;(e.target as HTMLElement).style.color = 'var(--tx)'
+                  }}
+                  onMouseLeave={(e) => {
+                    ;(e.target as HTMLElement).style.borderColor = 'var(--bdr)'
+                    ;(e.target as HTMLElement).style.color = 'var(--tx2)'
+                  }}
+                >
+                  {hasPinSet ? 'Ändern' : 'Setzen'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {showPinForm && (
+            <div style={card}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {hasPinSet && (
+                  <div>
+                    <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
+                      Alter PIN
+                    </label>
+                    <input
+                      type="password"
+                      value={oldPin}
+                      onChange={(e) => setOldPin(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        fontSize: 12,
+                        border: '1px solid var(--bdr)',
+                        borderRadius: 4,
+                        background: 'var(--bg2)',
+                        color: 'var(--tx)',
+                        fontFamily: 'monospace'
+                      }}
+                      placeholder="••••"
+                    />
+                  </div>
+                )}
+                <div>
+                  <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
+                    Neuer PIN (4 Ziffern)
+                  </label>
+                  <input
+                    type="password"
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value.slice(0, 4))}
+                    maxLength={4}
+                    style={{
+                      width: '100%',
+                      padding: '6px 8px',
+                      fontSize: 12,
+                      border: '1px solid var(--bdr)',
+                      borderRadius: 4,
+                      background: 'var(--bg2)',
+                      color: 'var(--tx)',
+                      fontFamily: 'monospace'
+                    }}
+                    placeholder="••••"
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
+                    PIN bestätigen
+                  </label>
+                  <input
+                    type="password"
+                    value={confirmPin}
+                    onChange={(e) => setConfirmPin(e.target.value.slice(0, 4))}
+                    maxLength={4}
+                    style={{
+                      width: '100%',
+                      padding: '6px 8px',
+                      fontSize: 12,
+                      border: '1px solid var(--bdr)',
+                      borderRadius: 4,
+                      background: 'var(--bg2)',
+                      color: 'var(--tx)',
+                      fontFamily: 'monospace'
+                    }}
+                    placeholder="••••"
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    onClick={async () => {
+                      if (!newPin || !confirmPin || newPin !== confirmPin || newPin.length < 4) {
+                        alert('PINs müssen 4 Ziffern sein und übereinstimmen')
+                        return
+                      }
+                      if (hasPinSet && !oldPin) {
+                        alert('Alter PIN erforderlich')
+                        return
+                      }
+                      if (hasPinSet) {
+                        const verified = await window.hcloud.appconfig.verifyPin(oldPin)
+                        if (!verified.success || !verified.data) {
+                          alert('Alter PIN ist falsch')
+                          return
+                        }
+                      }
+                      const res = await window.hcloud.appconfig.setPin(newPin)
+                      if (res.success) {
+                        setHasPinSet(true)
+                        setNewPin('')
+                        setConfirmPin('')
+                        setOldPin('')
+                        setShowPinForm(false)
+                        alert('PIN gespeichert!')
+                      }
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '6px 12px',
+                      fontSize: 11,
+                      background: 'var(--green)',
+                      border: '1px solid var(--green)',
+                      borderRadius: 4,
+                      color: '#fff',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Speichern
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowPinForm(false)
+                      setNewPin('')
+                      setConfirmPin('')
+                      setOldPin('')
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '6px 12px',
+                      fontSize: 11,
+                      border: '1px solid var(--bdr)',
+                      borderRadius: 4,
+                      color: 'var(--tx2)',
+                      background: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Abbrechen
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </div>

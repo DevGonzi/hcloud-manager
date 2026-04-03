@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useT } from '../../i18n'
+import { useT } from '../../i18n/useT'
 
 interface NavItem {
   icon: string

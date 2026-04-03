@@ -8,7 +8,7 @@
   "homepage": "https://gonzi.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gonzitech/hcloud-manager"
+    "url": "https://github.com/DevGonzi/hcloud-manager"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -83,7 +83,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/ui": "^4.1.2",
-    "electron": "^39.2.6",
+    "electron": "^38.2.0",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
     "eslint": "^9.39.1",

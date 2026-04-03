@@ -3,7 +3,7 @@ import hetznerLogo from '../../assets/hetzner.png'
 import { useProjectStore } from '../../stores/project.store'
 import { useServerStore } from '../../stores/server.store'
 import { ProjectSwitcher } from '../projects/ProjectSwitcher'
-import { useT } from '../../i18n'
+import { useT } from '../../i18n/useT'
 
 function IconButton({
   onClick,
@@ -107,10 +107,16 @@ export function Titlebar() {
             } as React.CSSProperties
           }
         >
-          <IconButton onClick={() => window.hcloud.window.minimize()} title={t('titlebar.minimize')}>
+          <IconButton
+            onClick={() => window.hcloud.window.minimize()}
+            title={t('titlebar.minimize')}
+          >
             ─
           </IconButton>
-          <IconButton onClick={() => window.hcloud.window.maximize()} title={t('titlebar.maximize')}>
+          <IconButton
+            onClick={() => window.hcloud.window.maximize()}
+            title={t('titlebar.maximize')}
+          >
             ▭
           </IconButton>
           <IconButton
@@ -148,10 +154,16 @@ export function Titlebar() {
             } as React.CSSProperties
           }
         >
-          <IconButton onClick={() => window.hcloud.window.minimize()} title={t('titlebar.minimize')}>
+          <IconButton
+            onClick={() => window.hcloud.window.minimize()}
+            title={t('titlebar.minimize')}
+          >
             ─
           </IconButton>
-          <IconButton onClick={() => window.hcloud.window.maximize()} title={t('titlebar.maximize')}>
+          <IconButton
+            onClick={() => window.hcloud.window.maximize()}
+            title={t('titlebar.maximize')}
+          >
             ▭
           </IconButton>
           <IconButton

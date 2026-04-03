@@ -3,7 +3,7 @@ import { useServerStore } from '../stores/server.store'
 import { useProjectStore } from '../stores/project.store'
 import { ServerTable } from '../components/servers/ServerTable'
 import { ServerDetail } from '../components/servers/ServerDetail'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 import type {
   HCloudServerType,
   HCloudLocation,

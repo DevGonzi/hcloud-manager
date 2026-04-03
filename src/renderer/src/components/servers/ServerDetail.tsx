@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useServerStore } from '../../stores/server.store'
 import { ServerMetrics } from './ServerMetrics'
 import type { HCloudServer } from '../../../../shared/types'
-import { useT } from '../../i18n'
+import { useT } from '../../i18n/useT'
 
 type Tab = 'overview' | 'console' | 'backups' | 'metrics'
 

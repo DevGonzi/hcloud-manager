@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { useProjectStore } from '../stores/project.store'
 import { useServerStore } from '../stores/server.store'
 import type { HCloudImage } from '../../../shared/types'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 
 function CreateSnapshotDialog({
   projectId,

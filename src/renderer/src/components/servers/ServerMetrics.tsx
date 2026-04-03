@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LineChart, Line, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import type { HCloudServer, MetricType } from '../../../../shared/types'
-import { useT } from '../../i18n'
+import { useT } from '../../i18n/useT'
 
 interface DataPoint {
   t: number

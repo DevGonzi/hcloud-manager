@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { ActionLogEntry } from '../../../shared/types'
-import { useT } from '../i18n'
+import { useT } from '../i18n/useT'
 
 export function ActivityPage() {
   const { t } = useT()
