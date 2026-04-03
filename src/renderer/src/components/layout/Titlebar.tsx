@@ -102,7 +102,7 @@ export function Titlebar() {
               display: 'flex',
               alignItems: 'center',
               gap: 2,
-              marginLeft: 8,
+              marginLeft: 20,
               WebkitAppRegion: 'no-drag'
             } as React.CSSProperties
           }
