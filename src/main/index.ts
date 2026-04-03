@@ -3,7 +3,7 @@ import path from 'path'
 import { ProjectStorage } from './storage'
 import { registerAllHandlers } from './ipc'
 
-const storage = new ProjectStorage()
+let storage: ProjectStorage | null = null
 let mainWindow: BrowserWindow | null = null
 
 function createWindow() {
@@ -35,6 +35,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  storage = new ProjectStorage()
   registerAllHandlers(storage)
   createWindow()
   app.on('activate', () => {

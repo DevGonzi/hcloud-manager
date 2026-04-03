@@ -50,14 +50,14 @@ export class HCloudClient {
 
   async serverAction(id: number, action: ServerAction): Promise<void> {
     const actionMap: Record<ServerAction, string> = {
-      'start': 'power_on',
-      'shutdown': 'power_off',
+      'start': 'poweron',
+      'shutdown': 'poweroff',
       'reboot': 'reboot',
       'reset': 'reset',
       'rebuild': 'rebuild',
       'reset_password': 'reset_password',
-      'enable_backups': 'enable_backups',
-      'disable_backups': 'disable_backups'
+      'enable_backups': 'enable_backup',
+      'disable_backups': 'disable_backup'
     }
     const apiAction = actionMap[action] || action
     await axios.post(`${BASE}/servers/${id}/actions/${apiAction}`, {}, this.cfg)
