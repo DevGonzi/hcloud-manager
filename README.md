@@ -153,12 +153,10 @@ bug reports: open an issue. steps to reproduce appreciated. "it doesn't work" le
 
 If hcloud-manager saves you time, a coffee is appreciated ☕
 
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/devgonzi)
-
 [![Ko-Fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/devgonzi)
 
 ---
 
 ## license
 
-MIT. do whatever. – [gonzi](https://github.com/DevGonzi)_
+MIT. do whatever. – [gonzi](https://github.com/DevGonzi)
