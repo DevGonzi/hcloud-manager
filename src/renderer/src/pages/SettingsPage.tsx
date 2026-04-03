@@ -398,6 +398,30 @@ export function SettingsPage() {
                 {updateStatus === 'checking' ? t('settings.checkingForUpdates') : updateStatus === 'done' ? t('settings.upToDate') : updateStatus === 'error' ? t('settings.updateError') : t('settings.checkForUpdates')}
               </button>
             </div>
+            <div style={divider} />
+            <div style={{ padding: '8px 0' }}>
+              <a
+                href="https://ko-fi.com/devgonzi"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '5px 12px',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  borderRadius: 4,
+                  border: '1px solid #ff5e5b44',
+                  background: '#ff5e5b11',
+                  color: '#ff5e5b',
+                  textDecoration: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                ☕ Buy me a coffee
+              </a>
+            </div>
           </div>
         </section>
 

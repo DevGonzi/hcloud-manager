@@ -1,10 +1,25 @@
-import { app, BrowserWindow, screen, globalShortcut } from 'electron'
+import { app, BrowserWindow, screen, globalShortcut, shell } from 'electron'
 import path from 'path'
 import { ProjectStorage } from './storage'
 import { registerAllHandlers } from './ipc'
 
+// Auto-Updater nur im Produktion-Mode
+let autoUpdater: any = null
+if (!process.env.VITE_DEV_SERVER_URL) {
+  try {
+    const { autoUpdater: updater } = require('electron-updater')
+    autoUpdater = updater
+  } catch (e) {
+    console.log('electron-updater not available')
+  }
+}
+
 let storage: ProjectStorage | null = null
-let mainWindow: BrowserWindow | null = null
+export let mainWindow: BrowserWindow | null = null
+
+export function getMainWindow() {
+  return mainWindow
+}
 
 function registerGlobalShortcuts() {
   // Strg+L (Cmd+L auf Mac) zum Sperren
@@ -46,6 +61,11 @@ function createWindow() {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url)
+    return { action: 'deny' }
+  })
 }
 
 app.whenReady().then(() => {
@@ -53,6 +73,12 @@ app.whenReady().then(() => {
   registerAllHandlers(storage)
   registerGlobalShortcuts()
   createWindow()
+
+  // Auto-Updates checken
+  if (autoUpdater) {
+    autoUpdater.checkForUpdatesAndNotify()
+  }
+
   app.on('activate', () => {
     if (!mainWindow) createWindow()
   })
