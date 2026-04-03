@@ -108,31 +108,33 @@ export function Titlebar() {
         ↺
       </IconButton>
 
-      <div
-        style={
-          {
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            marginLeft: 4,
-            WebkitAppRegion: 'no-drag'
-          } as React.CSSProperties
-        }
-      >
-        <IconButton onClick={() => window.hcloud.window.minimize()} title={t('titlebar.minimize')}>
-          ─
-        </IconButton>
-        <IconButton onClick={() => window.hcloud.window.maximize()} title={t('titlebar.maximize')}>
-          ▭
-        </IconButton>
-        <IconButton
-          onClick={() => window.hcloud.window.close()}
-          title={t('titlebar.close')}
-          isClose
+      {process.platform !== 'darwin' && (
+        <div
+          style={
+            {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              marginLeft: 4,
+              WebkitAppRegion: 'no-drag'
+            } as React.CSSProperties
+          }
         >
-          ✕
-        </IconButton>
-      </div>
+          <IconButton onClick={() => window.hcloud.window.minimize()} title={t('titlebar.minimize')}>
+            ─
+          </IconButton>
+          <IconButton onClick={() => window.hcloud.window.maximize()} title={t('titlebar.maximize')}>
+            ▭
+          </IconButton>
+          <IconButton
+            onClick={() => window.hcloud.window.close()}
+            title={t('titlebar.close')}
+            isClose
+          >
+            ✕
+          </IconButton>
+        </div>
+      )}
     </div>
   )
 }
