@@ -11,14 +11,11 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            artifact: dist/*.exe
-            name: win
+            script: build:win
           - os: macos-latest
-            artifact: dist/*.{dmg,zip}
-            name: mac
+            script: build:mac
           - os: ubuntu-latest
-            artifact: dist/*.AppImage
-            name: linux
+            script: build:linux
 
     runs-on: ${{ matrix.os }}
 
@@ -28,22 +25,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies (Windows)
+        if: matrix.os == 'windows-latest'
         run: Remove-Item -ErrorAction SilentlyContinue package-lock.json; npm install
         shell: pwsh
 
-      - name: Typecheck
-        run: npm run typecheck
+      - name: Install dependencies
+        if: matrix.os != 'windows-latest'
+        run: npm install
 
-      - name: Build
-        run: npm run build:${{ matrix.name }}
+      - name: Build & Publish
+        run: npm run ${{ matrix.script }} -- --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ matrix.artifact }}
-          draft: false
-          prerelease: ${{ contains(github.ref_name, '-') }}
