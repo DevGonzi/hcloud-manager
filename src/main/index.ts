@@ -3,15 +3,14 @@ import path from 'path'
 import { ProjectStorage } from './storage'
 import { registerAllHandlers } from './ipc'
 
-// Auto-Updater nur im Produktion-Mode
+// Auto-Updater im Production & mit Config-Force
 let autoUpdater: any = null
-if (!process.env.VITE_DEV_SERVER_URL) {
-  try {
-    const { autoUpdater: updater } = require('electron-updater')
-    autoUpdater = updater
-  } catch (e) {
-    console.log('electron-updater not available')
-  }
+try {
+  const { autoUpdater: updater } = require('electron-updater')
+  autoUpdater = updater
+  autoUpdater.forceDevUpdateConfig = !!process.env.DEV_UPDATE_CHECK // Force in Dev mit DEV_UPDATE_CHECK=true
+} catch (e) {
+  console.log('electron-updater not available')
 }
 
 let storage: ProjectStorage | null = null
@@ -40,6 +39,10 @@ function createWindow() {
   const w = Math.round(width * 0.75)
   const h = Math.round(height * 0.8)
 
+  // In production the icon comes from the exe's embedded PE resource (set by electron-builder).
+  // Only set it explicitly in dev mode where there's no exe to pull from.
+  const isDev = !!process.env['ELECTRON_RENDERER_URL']
+
   mainWindow = new BrowserWindow({
     width: Math.max(w, 1200),
     height: Math.max(h, 750),
@@ -47,7 +50,7 @@ function createWindow() {
     minHeight: 600,
     frame: false,
     titleBarStyle: 'hidden',
-    icon: path.join(app.getAppPath(), 'build/icon.ico'),
+    ...(isDev ? { icon: path.join(__dirname, '../../build/icon.ico') } : {}),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
