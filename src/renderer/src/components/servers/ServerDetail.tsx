@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useServerStore } from '../../stores/server.store'
 import { ServerMetrics } from './ServerMetrics'
 import type { HCloudServer } from '../../../../shared/types'
 import { useT } from '../../i18n'
 
-type Tab = 'overview' | 'console' | 'backups' | 'networking' | 'volumes' | 'metrics'
+type Tab = 'overview' | 'console' | 'metrics'
 
 interface Props {
   projectId: string | null
@@ -96,24 +96,6 @@ function InfoCard({
   )
 }
 
-function PlaceholderTab({ label }: { label: string }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '48px 0',
-        color: 'var(--tx3)',
-        gap: 8
-      }}
-    >
-      <span style={{ fontSize: 24, opacity: 0.2 }}>◫</span>
-      <p style={{ fontSize: 12, margin: 0 }}>{label}</p>
-    </div>
-  )
-}
 
 function VncButton({
   isRunning,
@@ -259,9 +241,6 @@ export function ServerDetail({ projectId, readonly, onAction }: Props) {
   const tabLabels: Record<Tab, string> = {
     overview: t('serverDetail.tabOverview'),
     console: t('serverDetail.tabConsole'),
-    backups: 'Backups',
-    networking: t('serverDetail.tabNetworking'),
-    volumes: t('serverDetail.tabVolumes'),
     metrics: t('serverDetail.tabMetrics')
   }
   const { servers, selectedServerId, selectServer } = useServerStore()
@@ -382,15 +361,6 @@ export function ServerDetail({ projectId, readonly, onAction }: Props) {
               />
             )}
             {activeTab === 'console' && <ConsoleTab server={server} projectId={projectId} />}
-            {activeTab === 'backups' && (
-              <BackupsTab server={server} projectId={projectId} readonly={readonly} />
-            )}
-            {activeTab === 'networking' && (
-              <PlaceholderTab label={t('serverDetail.placeholderNetworking')} />
-            )}
-            {activeTab === 'volumes' && (
-              <PlaceholderTab label={t('serverDetail.placeholderVolumes')} />
-            )}
             {activeTab === 'metrics' && <ServerMetrics server={server} projectId={projectId} />}
           </div>
         </>
@@ -631,221 +601,6 @@ function OverviewTab({
           </div>
         )}
       </div>
-    </div>
-  )
-}
-
-function BackupsTab({
-  server,
-  projectId,
-  readonly
-}: {
-  server: HCloudServer
-  projectId: string | null
-  readonly: boolean
-}) {
-  const [backups, setBackups] = useState<import('../../../../shared/types').HCloudImage[]>([])
-  const [loading, setLoading] = useState(false)
-  const [toggling, setToggling] = useState(false)
-  const [deleting, setDeleting] = useState<number | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const backupsEnabled = server.backup_window !== null
-
-  async function loadBackups() {
-    if (!projectId) return
-    setLoading(true)
-    const res = await window.hcloud.images.list(projectId, 'backup')
-    if (res.success) setBackups(res.data.filter((img) => img.created_from?.id === server.id))
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    loadBackups()
-  }, [server.id, projectId])
-
-  async function toggleBackups() {
-    if (!projectId || readonly) return
-    setToggling(true)
-    setError(null)
-    const action = backupsEnabled ? 'disable_backups' : 'enable_backups'
-    const res = await window.hcloud.api.serverAction(projectId, server.id, action)
-    if (!res.success) setError(res.error)
-    setToggling(false)
-  }
-
-  async function deleteBackup(imageId: number) {
-    if (!projectId || readonly) return
-    setDeleting(imageId)
-    await window.hcloud.images.delete(projectId, imageId)
-    setDeleting(null)
-    loadBackups()
-  }
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {/* Toggle card */}
-      <div
-        style={{
-          background: 'var(--bg3)',
-          border: '1px solid var(--bdr)',
-          borderRadius: 8,
-          padding: 12,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}
-      >
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--tx)' }}>
-            Automatische Backups
-          </div>
-          <div
-            style={{
-              fontSize: 10,
-              color: 'var(--tx3)',
-              fontFamily: 'JetBrains Mono, monospace',
-              marginTop: 2
-            }}
-          >
-            {backupsEnabled ? `Fenster: ${server.backup_window}` : 'Deaktiviert'}
-          </div>
-        </div>
-        <button
-          onClick={toggleBackups}
-          disabled={readonly || toggling}
-          style={{
-            padding: '4px 10px',
-            fontSize: 11,
-            borderRadius: 6,
-            fontWeight: 500,
-            border: backupsEnabled ? '1px solid var(--bdr)' : '1px solid rgba(30,217,122,0.4)',
-            color: backupsEnabled ? 'var(--tx3)' : 'var(--green)',
-            background: 'none',
-            cursor: readonly || toggling ? 'not-allowed' : 'pointer',
-            opacity: readonly ? 0.4 : 1
-          }}
-        >
-          {toggling ? '…' : backupsEnabled ? 'Deaktivieren' : 'Aktivieren'}
-        </button>
-      </div>
-      {error && <p style={{ fontSize: 10, color: 'var(--red)', margin: 0 }}>{error}</p>}
-
-      {/* List header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div
-          style={{
-            fontSize: 9,
-            fontWeight: 600,
-            color: 'var(--tx3)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            fontFamily: 'JetBrains Mono, monospace'
-          }}
-        >
-          Backups ({backups.length})
-        </div>
-        <button
-          onClick={loadBackups}
-          style={{
-            fontSize: 10,
-            color: 'var(--tx3)',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-        >
-          ↺
-        </button>
-      </div>
-
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--tx3)', fontSize: 12 }}>
-          Lade…
-        </div>
-      ) : backups.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--tx3)', fontSize: 12 }}>
-          {backupsEnabled ? 'Noch keine Backups vorhanden' : 'Backups sind deaktiviert'}
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {backups.map((b) => (
-            <BackupRow
-              key={b.id}
-              backup={b}
-              readonly={readonly}
-              deleting={deleting === b.id}
-              onDelete={() => deleteBackup(b.id)}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function BackupRow({
-  backup: b,
-  readonly,
-  deleting,
-  onDelete
-}: {
-  backup: import('../../../../shared/types').HCloudImage
-  readonly: boolean
-  deleting: boolean
-  onDelete: () => void
-}) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: 'var(--bg3)',
-        border: '1px solid var(--bdr)',
-        borderRadius: 8,
-        padding: '8px 12px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8
-      }}
-    >
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
-          style={{
-            fontSize: 11,
-            fontFamily: 'JetBrains Mono, monospace',
-            color: 'var(--tx)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          {b.description}
-        </div>
-        <div style={{ fontSize: 10, color: 'var(--tx3)', marginTop: 2 }}>
-          {b.image_size != null ? `${b.image_size.toFixed(1)} GB · ` : ''}
-          {new Date(b.created).toLocaleDateString('de-DE')}
-        </div>
-      </div>
-      {!readonly && (
-        <button
-          onClick={onDelete}
-          disabled={deleting}
-          style={{
-            opacity: hovered ? 1 : 0,
-            fontSize: 10,
-            padding: '2px 6px',
-            border: '1px solid var(--bdr)',
-            borderRadius: 4,
-            color: 'var(--tx3)',
-            background: 'none',
-            cursor: 'pointer',
-            transition: 'opacity 0.1s'
-          }}
-        >
-          {deleting ? '…' : '✕'}
-        </button>
-      )}
     </div>
   )
 }
