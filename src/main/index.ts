@@ -47,7 +47,7 @@ function createWindow() {
     minHeight: 600,
     frame: false,
     titleBarStyle: 'hidden',
-    icon: path.join(__dirname, '../../build/icon.ico'),
+    icon: path.join(app.getAppPath(), 'build/icon.ico'),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
