@@ -1,6 +1,6 @@
 {
   "name": "hcloud-manager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hetzner Cloud management desktop application for managing servers, networks, volumes, and more",
   "main": "./out/main/index.js",
   "author": "Gonzi <hello@gonzi.tech> (https://gonzi.tech)",
@@ -23,7 +23,10 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
@@ -33,6 +36,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "electron-updater": "^6.1.0",
     "lucide-react": "^1.7.0",
     "recharts": "^3.8.1",
     "tailwind-merge": "^3.5.0",
