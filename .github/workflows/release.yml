@@ -1,13 +1,12 @@
-name: Build
+name: Release
 
 on:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  release:
     strategy:
       matrix:
         include:
@@ -29,7 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Install dependencies
         run: Remove-Item -ErrorAction SilentlyContinue package-lock.json; npm install
@@ -43,10 +41,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
         with:
-          name: hcloud-manager-${{ matrix.name }}
-          path: ${{ matrix.artifact }}
-          if-no-files-found: error
-          retention-days: 14
+          files: ${{ matrix.artifact }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
