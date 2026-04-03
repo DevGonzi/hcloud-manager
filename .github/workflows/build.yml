@@ -11,6 +11,9 @@ jobs:
     strategy:
       matrix:
         include:
+          - os: windows-latest
+            artifact: dist/*.exe
+            name: win
           - os: macos-latest
             artifact: dist/*.dmg
             name: mac
@@ -29,7 +32,8 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: rm -f package-lock.json && npm install
+        run: Remove-Item -ErrorAction SilentlyContinue package-lock.json; npm install
+        shell: pwsh
 
       - name: Typecheck
         run: npm run typecheck
