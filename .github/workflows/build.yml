@@ -11,9 +11,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-latest
-            artifact: dist/*.exe
-            name: windows
           - os: macos-latest
             artifact: dist/*.dmg
             name: macos
