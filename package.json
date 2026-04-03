@@ -1,6 +1,6 @@
 {
   "name": "hcloud-manager",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Hetzner Cloud management desktop application for managing servers, networks, volumes, and more",
   "main": "./out/main/index.js",
   "author": "Gonzi <hello@gonzi.tech> (https://gonzi.tech)",
