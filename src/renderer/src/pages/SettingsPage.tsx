@@ -35,12 +35,24 @@ export function SettingsPage() {
   const [newPin, setNewPin] = useState('')
   const [confirmPin, setConfirmPin] = useState('')
   const [oldPin, setOldPin] = useState('')
+  const [appVersion, setAppVersion] = useState('')
+  const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'done' | 'error'>('idle')
 
   useEffect(() => {
     window.hcloud.appconfig.getHasPinSet().then((res) => {
       if (res.success) setHasPinSet(res.data)
     })
+    window.hcloud.app.getVersion().then((res) => {
+      if (res.success) setAppVersion(res.data)
+    })
   }, [])
+
+  const handleCheckForUpdates = async () => {
+    setUpdateStatus('checking')
+    const res = await window.hcloud.app.checkForUpdates()
+    setUpdateStatus(res.success ? 'done' : 'error')
+    setTimeout(() => setUpdateStatus('idle'), 4000)
+  }
 
   async function handleRemoveProject(id: string) {
     await removeProject(id)
@@ -339,7 +351,7 @@ export function SettingsPage() {
           <div style={sectionLabel}>{t('settings.appInfo')}</div>
           <div style={card}>
             {[
-              { label: t('settings.version'), value: '0.1.0' },
+              { label: t('settings.version'), value: appVersion || '…' },
               { label: t('settings.api'), value: 'api.hetzner.cloud/v1' },
               { label: t('settings.cacheTtl'), value: '30s' }
             ].map((row, i, arr) => (
@@ -367,8 +379,24 @@ export function SettingsPage() {
               </div>
             ))}
             <div style={divider} />
-            <div style={{ padding: '6px 0', fontSize: 11, color: 'var(--tx3)' }}>
-              Made with ♥ by DevGonzi from Gonzi.Tech
+            <div style={{ padding: '8px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 11, color: 'var(--tx3)' }}>Made with ♥ by DevGonzi from Gonzi.Tech</span>
+              <button
+                onClick={handleCheckForUpdates}
+                disabled={updateStatus === 'checking'}
+                style={{
+                  padding: '4px 12px',
+                  fontSize: 11,
+                  borderRadius: 4,
+                  border: '1px solid var(--bdr)',
+                  background: 'none',
+                  color: updateStatus === 'done' ? 'var(--green, #4caf50)' : updateStatus === 'error' ? 'var(--red)' : 'var(--tx2)',
+                  cursor: updateStatus === 'checking' ? 'not-allowed' : 'pointer',
+                  opacity: updateStatus === 'checking' ? 0.6 : 1
+                }}
+              >
+                {updateStatus === 'checking' ? 'Prüfe…' : updateStatus === 'done' ? '✓ Aktuell' : updateStatus === 'error' ? 'Fehler' : 'Auf Updates prüfen'}
+              </button>
             </div>
           </div>
         </section>

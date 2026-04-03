@@ -349,12 +349,17 @@ export interface HCloudApi {
     unlock: () => Promise<IpcResult<void>>
     getIsLocked: () => Promise<IpcResult<boolean>>
     onLockRequest: (callback: () => void) => void
+    onReset: (callback: () => void) => void
     resetPin: () => Promise<IpcResult<void>>
   }
   window: {
     minimize: () => void
     maximize: () => void
     close: () => void
+  }
+  app: {
+    getVersion: () => Promise<IpcResult<string>>
+    checkForUpdates: () => Promise<IpcResult<void>>
   }
 }
 
