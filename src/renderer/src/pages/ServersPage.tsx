@@ -33,6 +33,7 @@ function CreateServerDialog({
   const [typesAreLoading, setTypesAreLoading] = useState(false)
   const [doingSubmit, setDoingSubmit] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const { t } = useT()
 
   useEffect(() => {
     let isMounted = true

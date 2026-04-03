@@ -12,6 +12,8 @@ it's an electron app that talks to the hetzner cloud api and lets you manage you
 
 built this because i manage like 15 servers across 3 projects and clicking through the hetzner ui every time got old real fast. proxmox has this vibe where everything is in one place and you can see what's happening at a glance. wanted that but for hetzner.
 
+the real problem it solves: you're deep in code, something's wrong, you need to restart a server or check if cpu is spiking. the hetzner web ui means - find the tab (it's buried somewhere between 50 others), wait for it to load, log in again because the session expired, navigate to the right project, find the server. by then you've lost your train of thought completely. this app lives in your taskbar. click, done, back to work.
+
 it's not perfect. it's open source. PRs welcome.
 
 ---

@@ -12,6 +12,8 @@ eine electron-app die mit der hetzner cloud api redet und damit server, firewall
 
 gebaut weil ich ~15 server über 3 projekte verteilt manage und das dauernde durchklicken im hetzner web-ui irgendwann nervig wurde. proxmox hat diesen vibe wo man alles auf einen blick sieht. das wollte ich für hetzner haben.
 
+das eigentliche problem das es löst: du bist mitten im code, irgendwas stimmt nicht, du musst kurz einen server neustarten oder checken ob die cpu durch die decke geht. hetzner web-ui bedeutet - tab finden (irgendwo zwischen den anderen 50), warten bis er lädt, neu einloggen weil die session abgelaufen ist, zum richtigen projekt navigieren, server suchen. gedankengang weg. diese app sitzt in der taskleiste. klick, fertig, weiter.
+
 ist nicht perfekt. ist open source. PRs willkommen.
 
 ---

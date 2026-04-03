@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useServerStore } from '../../stores/server.store'
 import { ServerMetrics } from './ServerMetrics'
 import type { HCloudServer } from '../../../../shared/types'
 import { useT } from '../../i18n'
 
-type Tab = 'overview' | 'console' | 'metrics'
+type Tab = 'overview' | 'console' | 'backups' | 'metrics'
 
 interface Props {
   projectId: string | null
@@ -241,6 +241,7 @@ export function ServerDetail({ projectId, readonly, onAction }: Props) {
   const tabLabels: Record<Tab, string> = {
     overview: t('serverDetail.tabOverview'),
     console: t('serverDetail.tabConsole'),
+    backups: 'Backups',
     metrics: t('serverDetail.tabMetrics')
   }
   const { servers, selectedServerId, selectServer } = useServerStore()
@@ -361,6 +362,9 @@ export function ServerDetail({ projectId, readonly, onAction }: Props) {
               />
             )}
             {activeTab === 'console' && <ConsoleTab server={server} projectId={projectId} />}
+            {activeTab === 'backups' && (
+              <BackupsTab server={server} projectId={projectId} readonly={readonly} />
+            )}
             {activeTab === 'metrics' && <ServerMetrics server={server} projectId={projectId} />}
           </div>
         </>
@@ -627,6 +631,347 @@ function ConsoleTab({ server, projectId }: { server: HCloudServer; projectId: st
         <p style={{ fontSize: 12, color: 'var(--tx3)', textAlign: 'center', margin: 0 }}>
           {t('serverDetail.serverMustRun')}
         </p>
+      )}
+    </div>
+  )
+}
+
+function BackupsTab({
+  server,
+  projectId,
+  readonly
+}: {
+  server: HCloudServer
+  projectId: string | null
+  readonly: boolean
+}) {
+  const [backups, setBackups] = useState<import('../../../../shared/types').HCloudImage[]>([])
+  const [loading, setLoading] = useState(false)
+  const [toggling, setToggling] = useState(false)
+  const [deleting, setDeleting] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [showCreate, setShowCreate] = useState(false)
+  const [createDesc, setCreateDesc] = useState('')
+  const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
+  const backupsEnabled = server.backup_window !== null
+
+  async function loadBackups() {
+    if (!projectId) return
+    setLoading(true)
+    const res = await window.hcloud.images.list(projectId, 'backup')
+    if (res.success) setBackups(res.data.filter((img) => img.created_from?.id === server.id))
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadBackups()
+  }, [server.id, projectId])
+
+  async function toggleBackups() {
+    if (!projectId || readonly) return
+    setToggling(true)
+    setError(null)
+    const action = backupsEnabled ? 'disable_backups' : 'enable_backups'
+    const res = await window.hcloud.api.serverAction(projectId, server.id, action)
+    if (!res.success) setError(res.error)
+    setToggling(false)
+  }
+
+  async function deleteBackup(imageId: number) {
+    if (!projectId || readonly) return
+    setDeleting(imageId)
+    await window.hcloud.images.delete(projectId, imageId)
+    setDeleting(null)
+    loadBackups()
+  }
+
+  async function createSnapshot() {
+    if (!projectId || readonly) return
+    setCreating(true)
+    setCreateError(null)
+    const desc =
+      createDesc.trim() || `snapshot-${server.name}-${new Date().toISOString().slice(0, 10)}`
+    const res = await window.hcloud.images.createSnapshot(projectId, {
+      serverId: server.id,
+      description: desc
+    })
+    if (res.success) {
+      setShowCreate(false)
+      setCreateDesc('')
+    } else {
+      setCreateError(res.error)
+    }
+    setCreating(false)
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {/* Auto-backup toggle */}
+      <div
+        style={{
+          background: 'var(--bg3)',
+          border: '1px solid var(--bdr)',
+          borderRadius: 8,
+          padding: 12,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--tx)' }}>
+            Automatische Backups
+          </div>
+          <div
+            style={{
+              fontSize: 10,
+              color: 'var(--tx3)',
+              fontFamily: 'JetBrains Mono, monospace',
+              marginTop: 2
+            }}
+          >
+            {backupsEnabled ? `Fenster: ${server.backup_window}` : 'Deaktiviert'}
+          </div>
+        </div>
+        <button
+          onClick={toggleBackups}
+          disabled={readonly || toggling}
+          style={{
+            padding: '4px 10px',
+            fontSize: 11,
+            borderRadius: 6,
+            fontWeight: 500,
+            border: backupsEnabled ? '1px solid var(--bdr)' : '1px solid rgba(30,217,122,0.4)',
+            color: backupsEnabled ? 'var(--tx3)' : 'var(--green)',
+            background: 'none',
+            cursor: readonly || toggling ? 'not-allowed' : 'pointer',
+            opacity: readonly ? 0.4 : 1
+          }}
+        >
+          {toggling ? '…' : backupsEnabled ? 'Deaktivieren' : 'Aktivieren'}
+        </button>
+      </div>
+      {error && <p style={{ fontSize: 10, color: 'var(--red)', margin: 0 }}>{error}</p>}
+
+      {/* Snapshot create form */}
+      {showCreate && (
+        <div
+          style={{
+            background: 'var(--bg3)',
+            border: '1px solid var(--bdr)',
+            borderRadius: 8,
+            padding: 12,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8
+          }}
+        >
+          <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--tx)' }}>
+            Snapshot erstellen
+          </div>
+          <input
+            autoFocus
+            value={createDesc}
+            onChange={(e) => setCreateDesc(e.target.value)}
+            placeholder={`snapshot-${server.name}-${new Date().toISOString().slice(0, 10)}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') createSnapshot()
+              if (e.key === 'Escape') {
+                setShowCreate(false)
+                setCreateDesc('')
+                setCreateError(null)
+              }
+            }}
+            style={{
+              background: 'var(--bg4)',
+              border: '1px solid var(--bdr)',
+              borderRadius: 6,
+              padding: '5px 10px',
+              fontSize: 11,
+              color: 'var(--tx)',
+              outline: 'none',
+              fontFamily: 'JetBrains Mono, monospace'
+            }}
+          />
+          {createError && (
+            <p style={{ fontSize: 10, color: 'var(--red)', margin: 0 }}>{createError}</p>
+          )}
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button
+              onClick={createSnapshot}
+              disabled={creating}
+              style={{
+                flex: 1,
+                padding: '5px 0',
+                fontSize: 11,
+                fontWeight: 500,
+                borderRadius: 6,
+                border: '1px solid var(--red)',
+                background: 'var(--red)',
+                color: '#fff',
+                cursor: creating ? 'not-allowed' : 'pointer',
+                opacity: creating ? 0.6 : 1
+              }}
+            >
+              {creating ? '…' : 'Erstellen'}
+            </button>
+            <button
+              onClick={() => {
+                setShowCreate(false)
+                setCreateDesc('')
+                setCreateError(null)
+              }}
+              style={{
+                padding: '5px 12px',
+                fontSize: 11,
+                borderRadius: 6,
+                border: '1px solid var(--bdr)',
+                background: 'none',
+                color: 'var(--tx3)',
+                cursor: 'pointer'
+              }}
+            >
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* List header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            fontSize: 9,
+            fontWeight: 600,
+            color: 'var(--tx3)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            fontFamily: 'JetBrains Mono, monospace'
+          }}
+        >
+          Backups ({backups.length})
+        </div>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {!readonly && !showCreate && (
+            <button
+              onClick={() => setShowCreate(true)}
+              style={{
+                fontSize: 10,
+                padding: '2px 8px',
+                borderRadius: 4,
+                border: '1px solid var(--red)',
+                background: 'var(--red)',
+                color: '#fff',
+                cursor: 'pointer',
+                fontWeight: 500
+              }}
+            >
+              + Snapshot
+            </button>
+          )}
+          <button
+            onClick={loadBackups}
+            style={{
+              fontSize: 10,
+              color: 'var(--tx3)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            ↺
+          </button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--tx3)', fontSize: 12 }}>
+          Lade…
+        </div>
+      ) : backups.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--tx3)', fontSize: 12 }}>
+          {backupsEnabled ? 'Noch keine Backups vorhanden' : 'Backups sind deaktiviert'}
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {backups.map((b) => (
+            <BackupRow
+              key={b.id}
+              backup={b}
+              readonly={readonly}
+              deleting={deleting === b.id}
+              onDelete={() => deleteBackup(b.id)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function BackupRow({
+  backup: b,
+  readonly,
+  deleting,
+  onDelete
+}: {
+  backup: import('../../../../shared/types').HCloudImage
+  readonly: boolean
+  deleting: boolean
+  onDelete: () => void
+}) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: 'var(--bg3)',
+        border: '1px solid var(--bdr)',
+        borderRadius: 8,
+        padding: '8px 12px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8
+      }}
+    >
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            fontSize: 11,
+            fontFamily: 'JetBrains Mono, monospace',
+            color: 'var(--tx)',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {b.description}
+        </div>
+        <div style={{ fontSize: 10, color: 'var(--tx3)', marginTop: 2 }}>
+          {b.image_size != null ? `${b.image_size.toFixed(1)} GB · ` : ''}
+          {new Date(b.created).toLocaleDateString('de-DE')}
+        </div>
+      </div>
+      {!readonly && (
+        <button
+          onClick={onDelete}
+          disabled={deleting}
+          style={{
+            opacity: hovered ? 1 : 0,
+            fontSize: 10,
+            padding: '2px 6px',
+            border: '1px solid var(--bdr)',
+            borderRadius: 4,
+            color: 'var(--tx3)',
+            background: 'none',
+            cursor: 'pointer',
+            transition: 'opacity 0.1s'
+          }}
+        >
+          {deleting ? '…' : '✕'}
+        </button>
       )}
     </div>
   )
