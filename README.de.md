@@ -2,7 +2,7 @@
 
 > eine desktop-app zum verwalten von hetzner cloud. weil das web-ui okay ist, man aber manchmal einfach was natives in der taskleiste haben will.
 
-**[🇬🇧 English Version](README.md)**
+**[English Version](README.md)**
 
 ---
 
@@ -66,10 +66,10 @@ mit dem referral-link kriegst du 20€ credits und ich auch was:
 
 aktuellste version in den [releases](https://github.com/DevGonzi/hcloud-manager/releases).
 
-| plattform | datei |
-|-----------|-------|
-| windows   | `.exe` installer |
-| linux     | `.AppImage` |
+| plattform | datei                                     |
+| --------- | ----------------------------------------- |
+| windows   | `.exe` installer                          |
+| linux     | `.AppImage`                               |
 | mac       | `.dmg` (ungetestet, sollte funktionieren) |
 
 ### selbst bauen
@@ -131,4 +131,4 @@ MIT. mach was du willst.
 
 ---
 
-*– [gonzi](https://github.com/DevGonzi)*
+_– [gonzi](https://github.com/DevGonzi)_

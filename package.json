@@ -1,10 +1,15 @@
 {
   "name": "hcloud-manager",
   "version": "0.1.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "Hetzner Cloud management desktop application for managing servers, networks, volumes, and more",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "Gonzi <hello@gonzi.tech> (https://gonzi.tech)",
+  "license": "MIT",
+  "homepage": "https://gonzi.tech",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gonzitech/hcloud-manager"
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
@@ -25,6 +30,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@novnc/novnc": "^1.6.0",
     "axios": "^1.14.0",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.7.0",
@@ -71,6 +77,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^25.5.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

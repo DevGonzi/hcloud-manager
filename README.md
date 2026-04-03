@@ -2,7 +2,7 @@
 
 > a desktop app for managing hetzner cloud. because the web ui is fine but sometimes you just want a native thing that sits in your taskbar.
 
-**[🇩🇪 Deutsche Version](README.de.md)**
+**[Deutsche Version](README.de.md)**
 
 ---
 
