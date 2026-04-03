@@ -1,5 +1,7 @@
 # hcloud-manager
 
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/devgonzi)
+
 > a desktop app for managing hetzner cloud. because the web ui is fine but sometimes you just want a native thing that sits in your taskbar.
 
 **[Deutsche Version](README.de.md)**
