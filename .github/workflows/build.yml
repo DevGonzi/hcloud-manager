@@ -15,7 +15,7 @@ jobs:
             artifact: dist/*.exe
             name: win
           - os: macos-latest
-            artifact: dist/*.{dmg,zip}
+            artifact: dist/*.dmg
             name: mac
           - os: ubuntu-latest
             artifact: dist/*.AppImage

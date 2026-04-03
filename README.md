@@ -37,6 +37,7 @@ it's not perfect. it's open source. PRs welcome.
 - **ssh keys** - list, add, delete, copy fingerprint
 - **backups** - per-server backup management, enable/disable, delete individual backups
 - **i18n** - german and english, switches live
+- **security** - PIN protection with 6-digit code, persistent action log, auto-lock with Alt+L hotkey
 
 ---
 
@@ -47,6 +48,22 @@ genuinely one of the best vps providers out there. cheap, eu-based, fast network
 use my referral link - you get 20€ credits and i get some too:
 
 **➜ [hetzner.cloud/?ref=Rb92rAsFUGWC](https://hetzner.cloud/?ref=Rb92rAsFUGWC)**
+
+---
+
+## security
+
+the app includes several security features to protect your infrastructure:
+
+### PIN protection
+- **setup**: go to settings, set a 6-digit PIN. stored encrypted in `app-config.json`
+- **usage**: app locks on startup if PIN is set. unlock with your PIN to proceed
+- **hotkey**: press `Alt+L` or click the 🔒 button in the titlebar to lock at any time
+- **action log**: all server actions (create, delete, start, stop, reboot, etc) are logged with timestamp, resource type, and result. persists across restarts in `actionlog.json`
+
+### data protection
+- **api keys**: hetzner api keys stored encrypted via electron's `safeStorage` mechanism (os-level encryption on windows/mac/linux)
+- **readonly mode**: per-project flag that disables all write actions - useful for shared environments or monitoring-only access
 
 ---
 
@@ -109,6 +126,7 @@ src/
 
 ## stuff that's missing / on the list
 
+- [ ] biometric auth (windows hello, mac touchid) - fallback to PIN
 - [ ] networking and volumes detail views (currently read-only list)
 - [ ] floating ip assignment
 - [ ] load balancer target management

@@ -37,11 +37,30 @@ ist nicht perfekt. ist open source. PRs willkommen.
 - **ssh keys** - auflisten, hinzufügen, löschen, fingerprint kopieren
 - **backups** - pro-server backup-verwaltung, aktivieren/deaktivieren, einzelne backups löschen
 - **i18n** - deutsch und englisch, wechselt live
+- **sicherheit** - PIN-schutz mit 6-stelligem code, persistentes activity log, auto-lock mit Alt+L hotkey
+
+
+---
+
+## sicherheit
+
+die app beinhaltet mehrere sicherheits-features zum schutz der infrastruktur:
+
+### PIN-schutz
+- **setup**: geh in die einstellungen, setze einen 6-stelligen PIN. wird verschlüsselt in `app-config.json` gespeichert
+- **verwendung**: app sperrt sich beim start wenn PIN gesetzt ist. entsperre mit deinem PIN um fortzufahren
+- **hotkey**: drücke `Alt+L` oder klick den 🔒 button in der titelleiste um die app jederzeit zu sperren
+- **activity log**: alle server-aktionen (erstellen, löschen, starten, stoppen, reboot, etc) werden protokolliert mit timestamp, resource-typ und ergebnis. bleibt über restarts erhalten in `actionlog.json`
+
+### datenschutz
+- **api keys**: hetzner api-keys werden verschlüsselt gespeichert via electron's `safeStorage` mechanismus (os-level verschlüsselung auf windows/mac/linux)
+- **readonly-modus**: pro-projekt flag das alle schreibenden aktionen deaktiviert - nützlich für shared environments oder nur-monitoring-zugang
 
 ---
 
 ## geplant / fehlt noch
 
+- [ ] biometrische authentifizierung (windows hello, mac touchid) - fallback auf PIN
 - [ ] netzwerke und volumes detail-ansichten (aktuell nur read-only-liste)
 - [ ] floating ip zuweisen/entfernen im ui
 - [ ] load balancer target-verwaltung
