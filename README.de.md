@@ -157,6 +157,12 @@ Wenn hcloud-manager dir Zeit spart, freue ich mich über einen Kaffee ☕
 
 ---
 
+## disclaimer
+
+hcloud-manager ist ein unabhängiges Open-Source-Projekt und steht in keiner Verbindung zur Hetzner Online GmbH und wird von ihr weder unterstützt noch autorisiert. Hetzner und Hetzner Cloud sind Marken der Hetzner Online GmbH.
+
+---
+
 ## lizenz
 
 MIT. mach was du willst.– [gonzi](https://github.com/DevGonzi)

@@ -157,6 +157,12 @@ If hcloud-manager saves you time, a coffee is appreciated ☕
 
 ---
 
+## disclaimer
+
+hcloud-manager is an independent open source project and is not affiliated with, endorsed by, or associated with Hetzner Online GmbH in any way. Hetzner and Hetzner Cloud are trademarks of Hetzner Online GmbH.
+
+---
+
 ## license
 
 MIT. do whatever. – [gonzi](https://github.com/DevGonzi)
