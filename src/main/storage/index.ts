@@ -57,6 +57,17 @@ export class ProjectStorage {
     this.save()
   }
 
+  deleteStorageFile() {
+    try {
+      if (fs.existsSync(this.configPath)) {
+        fs.unlinkSync(this.configPath)
+      }
+      this.records = []
+    } catch (e) {
+      console.error('Error deleting storage file:', e)
+    }
+  }
+
   renameProject(id: string, newName: string): Project | null {
     const record = this.records.find((r) => r.id === id)
     if (!record) return null

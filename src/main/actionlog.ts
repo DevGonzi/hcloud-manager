@@ -44,6 +44,17 @@ export class ActionLog {
   getAll(): ActionLogEntry[] {
     return this.entries
   }
+
+  clear() {
+    try {
+      this.entries = []
+      if (fs.existsSync(this.logPath)) {
+        fs.unlinkSync(this.logPath)
+      }
+    } catch (e) {
+      console.error('Error clearing action log:', e)
+    }
+  }
 }
 
 export const actionLog = new ActionLog()

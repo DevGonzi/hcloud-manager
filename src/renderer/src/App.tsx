@@ -38,6 +38,11 @@ export default function App() {
     window.hcloud.appconfig.onLockRequest(() => {
       setLocked(true)
     })
+
+    // Listen for reset (PIN deleted) - reload page
+    window.hcloud.appconfig.onReset(() => {
+      window.location.reload()
+    })
   }, [])
 
   useEffect(() => {
