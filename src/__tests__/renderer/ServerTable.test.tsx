@@ -15,29 +15,37 @@ const mockServer: HCloudServer = {
   protection: { delete: false, rebuild: false },
   volumes: [],
   networks: [],
-  firewalls: [],
+  firewalls: []
 }
 
 describe('ServerTable', () => {
   it('rendert Server-Namen', () => {
-    render(<ServerTable servers={[mockServer]} onSelect={vi.fn()} selectedId={null} readonly={false} />)
+    render(
+      <ServerTable servers={[mockServer]} onSelect={vi.fn()} selectedId={null} readonly={false} />
+    )
     expect(screen.getByText('lap0001')).toBeInTheDocument()
   })
 
   it('zeigt running Status', () => {
-    render(<ServerTable servers={[mockServer]} onSelect={vi.fn()} selectedId={null} readonly={false} />)
+    render(
+      <ServerTable servers={[mockServer]} onSelect={vi.fn()} selectedId={null} readonly={false} />
+    )
     expect(screen.getByText('running')).toBeInTheDocument()
   })
 
   it('ruft onSelect auf bei Klick', () => {
     const onSelect = vi.fn()
-    render(<ServerTable servers={[mockServer]} onSelect={onSelect} selectedId={null} readonly={false} />)
+    render(
+      <ServerTable servers={[mockServer]} onSelect={onSelect} selectedId={null} readonly={false} />
+    )
     fireEvent.click(screen.getByText('lap0001'))
     expect(onSelect).toHaveBeenCalledWith(1)
   })
 
   it('zeigt IPv4 Adresse', () => {
-    render(<ServerTable servers={[mockServer]} onSelect={vi.fn()} selectedId={null} readonly={false} />)
+    render(
+      <ServerTable servers={[mockServer]} onSelect={vi.fn()} selectedId={null} readonly={false} />
+    )
     expect(screen.getByText('167.235.106.22')).toBeInTheDocument()
   })
 

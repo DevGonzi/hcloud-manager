@@ -1,28 +1,92 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
 
-* {
-  box-sizing: border-box;
+/* ─── custom color tokens ─────────────────────────────────── */
+:root {
+  --bg1: #0C0D10;
+  --bg2: #111318;
+  --bg3: #181B22;
+  --bg4: #1E2230;
+  --bdr: #252A38;
+  --bdr2: #2E3548;
+  --red: #D50C2D;
+  --red-dim: #8B1020;
+  --red-glow: rgba(213,12,45,0.15);
+  --tx: #E2E6F0;
+  --tx2: #8892A8;
+  --tx3: #525E78;
+  --green: #1ED97A;
+  --yellow: #F5A623;
 }
 
+/* ─── base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  margin: 0;
-  padding: 0;
   overflow: hidden;
-  background: #0C0D10;
-  color: #E2E6F0;
+  background: var(--bg1);
+  color: var(--tx);
   font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
   -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+#root { width: 100vw; height: 100vh; display: flex; flex-direction: column; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #252A38; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #2E3548; }
+::-webkit-scrollbar-thumb { background: var(--bdr); border-radius: 3px; }
+
+/* ─── tailwind v4 doesn't pick up custom-named colors ──────
+   so we define them explicitly. hover/focus variants inline. */
+
+.bg-bg-1 { background-color: var(--bg1); }
+.bg-bg-2 { background-color: var(--bg2); }
+.bg-bg-3 { background-color: var(--bg3); }
+.bg-bg-4 { background-color: var(--bg4); }
+.hover\:bg-bg-3:hover { background-color: var(--bg3); }
+.hover\:bg-bg-4:hover { background-color: var(--bg4); }
+
+.bg-accent     { background-color: var(--red); }
+.bg-accent-dim { background-color: var(--red-dim); }
+.bg-accent-glow{ background-color: var(--red-glow); }
+.hover\:bg-accent-dim:hover { background-color: var(--red-dim); }
+
+.bg-status-running  { background-color: var(--green); }
+.bg-status-off      { background-color: var(--tx3); }
+.bg-status-starting { background-color: var(--yellow); }
+
+.text-text   { color: var(--tx); }
+.text-text-2 { color: var(--tx2); }
+.text-text-3 { color: var(--tx3); }
+.text-accent { color: var(--red); }
+.text-status-running  { color: var(--green); }
+.text-status-off      { color: var(--tx3); }
+.text-status-starting { color: var(--yellow); }
+.hover\:text-text:hover   { color: var(--tx); }
+.hover\:text-text-2:hover { color: var(--tx2); }
+
+.border-border   { border-color: var(--bdr); }
+.border-border-2 { border-color: var(--bdr2); }
+.border-accent   { border-color: var(--red); }
+.border-accent-dim { border-color: var(--red-dim); }
+.hover\:border-border:hover   { border-color: var(--bdr); }
+.hover\:border-border-2:hover { border-color: var(--bdr2); }
+.hover\:border-accent-dim:hover { border-color: var(--red-dim); }
+
+.focus\:border-accent:focus { border-color: var(--red); }
+
+.accent-accent { accent-color: var(--red); }
+
+/* active sidebar indicator */
+.border-accent { border-color: var(--red); }
+
+/* font families */
+.font-sans { font-family: 'IBM Plex Sans', sans-serif; }
+.font-mono  { font-family: 'JetBrains Mono', monospace; }
+
+/* pulse dot animation */
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}

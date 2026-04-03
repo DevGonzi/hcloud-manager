@@ -21,7 +21,12 @@ export const useServerStore = create<ServerState>((set) => ({
     set({ loading: true, error: null, servers: [] })
     const result = await window.hcloud.api.getServers(projectId)
     if (result.success) {
-      set({ servers: result.data, loading: false })
+      set((state) => ({
+        servers: result.data,
+        loading: false,
+        // auto-select erstes wenn noch nichts gewählt
+        selectedServerId: state.selectedServerId ?? result.data[0]?.id ?? null
+      }))
     } else {
       set({ loading: false, error: result.error })
     }
@@ -32,9 +37,9 @@ export const useServerStore = create<ServerState>((set) => ({
   refreshServer: async (projectId, serverId) => {
     const result = await window.hcloud.api.getServer(projectId, serverId)
     if (result.success) {
-      set(state => ({
-        servers: state.servers.map(s => s.id === serverId ? result.data : s),
+      set((state) => ({
+        servers: state.servers.map((s) => (s.id === serverId ? result.data : s))
       }))
     }
-  },
+  }
 }))

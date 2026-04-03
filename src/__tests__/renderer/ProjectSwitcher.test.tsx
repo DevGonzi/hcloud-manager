@@ -11,7 +11,7 @@ describe('ProjectSwitcher', () => {
     vi.mocked(useProjectStore).mockReturnValue({
       projects: [
         { id: '1', name: 'Prod', readonly: false },
-        { id: '2', name: 'Dev', readonly: true },
+        { id: '2', name: 'Dev', readonly: true }
       ],
       activeProjectId: '1',
       setActiveProject: vi.fn(),
@@ -19,11 +19,11 @@ describe('ProjectSwitcher', () => {
       error: null,
       loadProjects: vi.fn(),
       addProject: vi.fn(),
-      removeProject: vi.fn(),
+      removeProject: vi.fn()
     } as any)
 
     vi.mocked(useServerStore).mockReturnValue({
-      loadServers: vi.fn(),
+      loadServers: vi.fn()
     } as any)
   })
 

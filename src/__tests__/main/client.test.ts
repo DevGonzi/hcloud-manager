@@ -20,7 +20,7 @@ describe('HCloudClient', () => {
     expect(mockedAxios.get).toHaveBeenCalledWith(
       'https://api.hetzner.cloud/v1/servers',
       expect.objectContaining({
-        headers: expect.objectContaining({ Authorization: 'Bearer test-token-123' }),
+        headers: expect.objectContaining({ Authorization: 'Bearer test-token-123' })
       })
     )
   })
@@ -42,7 +42,8 @@ describe('HCloudClient', () => {
     await client.serverAction(42, 'start')
     expect(mockedAxios.post).toHaveBeenCalledWith(
       'https://api.hetzner.cloud/v1/servers/42/actions/start',
-      {}, expect.anything()
+      {},
+      expect.anything()
     )
   })
 
@@ -51,7 +52,8 @@ describe('HCloudClient', () => {
       data: { wss_url: 'wss://console.hetzner.cloud/?token=abc', password: 'pw' }
     })
     expect(await client.requestConsole(42)).toEqual({
-      wss_url: 'wss://console.hetzner.cloud/?token=abc', password: 'pw'
+      wss_url: 'wss://console.hetzner.cloud/?token=abc',
+      password: 'pw'
     })
   })
 })

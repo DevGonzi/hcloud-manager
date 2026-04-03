@@ -48,12 +48,12 @@ export class ProjectStorage {
   }
 
   removeProject(id: string) {
-    this.records = this.records.filter(r => r.id !== id)
+    this.records = this.records.filter((r) => r.id !== id)
     this.save()
   }
 
   getApiKey(id: string): string | null {
-    const r = this.records.find(r => r.id === id)
+    const r = this.records.find((r) => r.id === id)
     if (!r) return null
     const buf = Buffer.from(r.encryptedKey, 'base64')
     return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(buf) : buf.toString()

@@ -1,35 +1,11 @@
+import { useState } from 'react'
+import { useT } from '../../i18n'
+
 interface NavItem {
   icon: string
   label: string
   section: string
 }
-
-const sections = [
-  {
-    label: 'Compute',
-    items: [
-      { icon: '▣', label: 'Servers', section: 'servers' },
-      { icon: '◫', label: 'Snapshots', section: 'snapshots' },
-      { icon: '⊞', label: 'Images', section: 'images' },
-    ],
-  },
-  {
-    label: 'Networking',
-    items: [
-      { icon: '⊗', label: 'Networks', section: 'networks' },
-      { icon: '◈', label: 'Firewalls', section: 'firewalls' },
-      { icon: '◉', label: 'Floating IPs', section: 'floating-ips' },
-      { icon: '⊕', label: 'Load Balancers', section: 'load-balancers' },
-    ],
-  },
-  {
-    label: 'Storage & Access',
-    items: [
-      { icon: '◧', label: 'Volumes', section: 'volumes' },
-      { icon: '⊡', label: 'SSH Keys', section: 'ssh-keys' },
-    ],
-  },
-]
 
 interface Props {
   activeSection: string
@@ -38,14 +14,63 @@ interface Props {
 }
 
 export function Sidebar({ activeSection, onSectionChange, serverCount }: Props) {
+  const { t } = useT()
+
+  const sections = [
+    {
+      label: t('nav.compute'),
+      items: [
+        { icon: '▣', label: t('nav.servers'), section: 'servers' },
+        { icon: '◫', label: t('nav.snapshots'), section: 'snapshots' },
+        { icon: '⊞', label: t('nav.images'), section: 'images' }
+      ]
+    },
+    {
+      label: t('nav.networking'),
+      items: [
+        { icon: '⊗', label: t('nav.networks'), section: 'networks' },
+        { icon: '◈', label: t('nav.firewalls'), section: 'firewalls' },
+        { icon: '◉', label: t('nav.floatingIps'), section: 'floating-ips' },
+        { icon: '⊕', label: t('nav.loadBalancers'), section: 'load-balancers' }
+      ]
+    },
+    {
+      label: t('nav.storageAccess'),
+      items: [
+        { icon: '◧', label: t('nav.volumes'), section: 'volumes' },
+        { icon: '⊡', label: t('nav.sshKeys'), section: 'ssh-keys' }
+      ]
+    }
+  ]
+
   return (
-    <nav className="w-[200px] bg-bg-2 border-r border-border flex flex-col flex-shrink-0 overflow-y-auto">
-      {sections.map(section => (
-        <div key={section.label} className="pt-3 pb-1">
-          <div className="px-3.5 pb-1.5 text-[9px] font-semibold text-text-3 uppercase tracking-[0.1em] font-mono">
+    <nav
+      style={{
+        width: 200,
+        background: 'var(--bg2)',
+        borderRight: '1px solid var(--bdr)',
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+        overflowY: 'auto'
+      }}
+    >
+      {sections.map((section) => (
+        <div key={section.label} style={{ paddingTop: 12, paddingBottom: 4 }}>
+          <div
+            style={{
+              padding: '0 14px 6px',
+              fontSize: 9,
+              fontWeight: 600,
+              color: 'var(--tx3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              fontFamily: 'JetBrains Mono, monospace'
+            }}
+          >
             {section.label}
           </div>
-          {section.items.map(item => (
+          {section.items.map((item) => (
             <NavLink
               key={item.section}
               item={item}
@@ -57,9 +82,9 @@ export function Sidebar({ activeSection, onSectionChange, serverCount }: Props) 
         </div>
       ))}
 
-      <div className="mt-auto border-t border-border py-2">
+      <div style={{ marginTop: 'auto', borderTop: '1px solid var(--bdr)', padding: '8px 0' }}>
         <NavLink
-          item={{ icon: '⚙', label: 'Einstellungen', section: 'settings' }}
+          item={{ icon: '⚙', label: t('nav.settings'), section: 'settings' }}
           active={activeSection === 'settings'}
           onClick={() => onSectionChange('settings')}
         />
@@ -68,30 +93,79 @@ export function Sidebar({ activeSection, onSectionChange, serverCount }: Props) 
   )
 }
 
-function NavLink({ item, active, count, onClick }: {
+function NavLink({
+  item,
+  active,
+  count,
+  onClick
+}: {
   item: NavItem
   active: boolean
   count?: number
   onClick: () => void
 }) {
+  const [hovered, setHovered] = useState(false)
+
+  const baseStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 9,
+    padding: '6px 14px',
+    cursor: 'pointer',
+    width: '100%',
+    borderLeft: '2px solid transparent',
+    fontSize: 12,
+    fontWeight: 400,
+    background: 'none',
+    textAlign: 'left',
+    transition: 'all 0.1s'
+  }
+
+  const activeStyle: React.CSSProperties = {
+    ...baseStyle,
+    background: 'var(--red-glow)',
+    color: 'var(--tx)',
+    borderLeftColor: 'var(--red)'
+  }
+
+  const inactiveStyle: React.CSSProperties = {
+    ...baseStyle,
+    color: hovered ? 'var(--tx)' : 'var(--tx2)',
+    background: hovered ? 'var(--bg3)' : 'none'
+  }
+
   return (
     <button
       onClick={onClick}
-      className={`
-        w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs font-medium transition-all
-        border-l-2 text-left
-        ${active
-          ? 'bg-accent-glow text-text border-accent'
-          : 'text-text-2 border-transparent hover:bg-bg-3 hover:text-text'
-        }
-      `}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={active ? activeStyle : inactiveStyle}
     >
-      <span className="w-4 text-center flex-shrink-0">{item.icon}</span>
-      <span className="flex-1">{item.label}</span>
+      <span
+        style={{
+          width: 16,
+          height: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0
+        }}
+      >
+        {item.icon}
+      </span>
+      <span style={{ flex: 1 }}>{item.label}</span>
       {count !== undefined && (
-        <span className={`text-[10px] rounded-full px-1.5 py-px font-mono ${
-          active ? 'bg-accent-dim text-red-300' : 'bg-bg-4 text-text-3'
-        }`}>
+        <span
+          style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 10,
+            borderRadius: 10,
+            padding: '1px 6px',
+            marginLeft: 'auto',
+            background: active ? 'var(--red-dim)' : 'var(--bg4)',
+            color: active ? '#FF8095' : 'var(--tx3)'
+          }}
+        >
           {count}
         </span>
       )}

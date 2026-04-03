@@ -4,24 +4,27 @@ vi.mock('electron', () => ({
   safeStorage: {
     isEncryptionAvailable: vi.fn().mockReturnValue(true),
     encryptString: vi.fn((s: string) => Buffer.from(s)),
-    decryptString: vi.fn((b: Buffer) => b.toString()),
+    decryptString: vi.fn((b: Buffer) => b.toString())
   },
-  app: { getPath: vi.fn().mockReturnValue('/tmp/test') },
+  app: { getPath: vi.fn().mockReturnValue('/tmp/test') }
 }))
 
 vi.mock('fs', () => ({
   default: {
     existsSync: vi.fn().mockReturnValue(false),
     readFileSync: vi.fn().mockReturnValue('[]'),
-    writeFileSync: vi.fn(),
-  },
+    writeFileSync: vi.fn()
+  }
 }))
 
 import { ProjectStorage } from '../../main/storage'
 
 describe('ProjectStorage', () => {
   let storage: ProjectStorage
-  beforeEach(() => { storage = new ProjectStorage(); vi.clearAllMocks() })
+  beforeEach(() => {
+    storage = new ProjectStorage()
+    vi.clearAllMocks()
+  })
 
   it('gibt leere Liste zurück', () => {
     expect(storage.getProjects()).toEqual([])
@@ -41,7 +44,7 @@ describe('ProjectStorage', () => {
   it('removeProject entfernt Projekt', () => {
     const p = storage.addProject({ name: 'Test', apiKey: 'hv1-abc', readonly: false })
     storage.removeProject(p.id)
-    expect(storage.getProjects().find(x => x.id === p.id)).toBeUndefined()
+    expect(storage.getProjects().find((x) => x.id === p.id)).toBeUndefined()
   })
 
   it('getApiKey null für unbekannte ID', () => {

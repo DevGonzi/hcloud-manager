@@ -11,17 +11,23 @@ interface Props {
 
 export function Layout({ children, activeSection, onSectionChange, serverCount }: Props) {
   return (
-    <div className="h-screen flex flex-col bg-bg-1 text-text overflow-hidden">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        overflow: 'hidden',
+        background: 'var(--bg1)'
+      }}
+    >
       <Titlebar />
-      <div className="flex flex-1 overflow-hidden">
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <Sidebar
           activeSection={activeSection}
           onSectionChange={onSectionChange}
           serverCount={serverCount}
         />
-        <main className="flex-1 overflow-hidden flex">
-          {children}
-        </main>
+        <main style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>{children}</main>
       </div>
     </div>
   )

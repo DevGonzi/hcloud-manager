@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      electron:
+        patterns:
+          - electron
+          - electron-*
+          - "@electron-toolkit/*"
+      react:
+        patterns:
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
+      vite:
+        patterns:
+          - vite
+          - "@vitejs/*"
+          - electron-vite
+      tailwind:
+        patterns:
+          - tailwindcss
+          - "@tailwindcss/*"

@@ -1,22 +1,26 @@
 import { useState } from 'react'
 import { useProjectStore } from '../../stores/project.store'
+import { useT } from '../../i18n'
 
 interface Props {
   onClose: () => void
 }
 
 export function AddProjectDialog({ onClose }: Props) {
+  const { t } = useT()
   const [name, setName] = useState('')
   const [apiKey, setApiKey] = useState('')
   const [readonly, setReadonly] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const addProject = useProjectStore(s => s.addProject)
+  const [nameInputFocused, setNameInputFocused] = useState(false)
+  const [apiKeyInputFocused, setApiKeyInputFocused] = useState(false)
+  const addProject = useProjectStore((s) => s.addProject)
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !apiKey.trim()) {
-      setError('Name und API-Key sind erforderlich')
+      setError(t('project.errorRequired'))
       return
     }
     setLoading(true)
@@ -26,64 +30,145 @@ export function AddProjectDialog({ onClose }: Props) {
     onClose()
   }
 
-  return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-bg-3 border border-border-2 rounded-xl p-5 w-[360px] shadow-2xl">
-        <h2 className="text-sm font-semibold text-text mb-4">Projekt hinzufügen</h2>
+  const inputStyle = (focused: boolean): React.CSSProperties => ({
+    width: '100%',
+    background: 'var(--bg3)',
+    border: `1px solid ${focused ? 'var(--red)' : 'var(--bdr)'}`,
+    borderRadius: 6,
+    padding: '6px 10px',
+    color: 'var(--tx)',
+    fontSize: 12,
+    outline: 'none',
+    boxSizing: 'border-box'
+  })
 
-        <form onSubmit={submit} className="flex flex-col gap-3">
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.6)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 200
+      }}
+    >
+      <div
+        style={{
+          background: 'var(--bg2)',
+          border: '1px solid var(--bdr2)',
+          borderRadius: 12,
+          padding: 24,
+          width: 360,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16
+        }}
+      >
+        <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--tx)', margin: 0 }}>
+          {t('project.addTitle')}
+        </h2>
+
+        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div>
-            <label className="text-[10px] font-semibold text-text-3 uppercase tracking-wider font-mono block mb-1">
-              Name
+            <label
+              style={{
+                fontSize: 11,
+                color: 'var(--tx2)',
+                display: 'block',
+                marginBottom: 4
+              }}
+            >
+              {t('project.name')}
             </label>
             <input
               value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full bg-bg-4 border border-border rounded-md px-3 py-2 text-sm text-text outline-none focus:border-accent transition-all"
-              placeholder="GonziTech Prod"
+              onChange={(e) => setName(e.target.value)}
+              onFocus={() => setNameInputFocused(true)}
+              onBlur={() => setNameInputFocused(false)}
+              style={inputStyle(nameInputFocused)}
+              placeholder={t('project.namePlaceholder')}
               autoFocus
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-semibold text-text-3 uppercase tracking-wider font-mono block mb-1">
-              Hetzner API Key
+            <label
+              style={{
+                fontSize: 11,
+                color: 'var(--tx2)',
+                display: 'block',
+                marginBottom: 4
+              }}
+            >
+              {t('project.apiKey')}
             </label>
             <input
               value={apiKey}
-              onChange={e => setApiKey(e.target.value)}
+              onChange={(e) => setApiKey(e.target.value)}
+              onFocus={() => setApiKeyInputFocused(true)}
+              onBlur={() => setApiKeyInputFocused(false)}
               type="password"
-              className="w-full bg-bg-4 border border-border rounded-md px-3 py-2 text-sm text-text font-mono outline-none focus:border-accent transition-all"
-              placeholder="hv1-••••••••"
+              style={{ ...inputStyle(apiKeyInputFocused), fontFamily: 'JetBrains Mono, monospace' }}
+              placeholder={t('project.apiKeyPlaceholder')}
             />
           </div>
 
-          <label className="flex items-center gap-2 text-xs text-text-2 cursor-pointer">
+          <label
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              fontSize: 12,
+              color: 'var(--tx2)',
+              cursor: 'pointer'
+            }}
+          >
             <input
               type="checkbox"
               checked={readonly}
-              onChange={e => setReadonly(e.target.checked)}
-              className="accent-accent"
+              onChange={(e) => setReadonly(e.target.checked)}
             />
-            Readonly (nur lesender Zugriff)
+            {t('project.readonly')}
           </label>
 
-          {error && <p className="text-xs text-accent">{error}</p>}
+          {error && <p style={{ fontSize: 12, color: 'var(--red)', margin: 0 }}>{error}</p>}
 
-          <div className="flex gap-2 mt-1">
+          <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 text-xs text-text-2 bg-bg-4 border border-border rounded-md hover:border-border-2 transition-all"
+              style={{
+                flex: 1,
+                background: 'var(--bg3)',
+                border: '1px solid var(--bdr)',
+                color: 'var(--tx2)',
+                borderRadius: 6,
+                padding: '7px 16px',
+                fontSize: 12,
+                cursor: 'pointer'
+              }}
             >
-              Abbrechen
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2 text-xs text-white bg-accent border border-accent rounded-md hover:bg-accent-dim transition-all disabled:opacity-50"
+              style={{
+                flex: 1,
+                background: 'var(--red)',
+                border: '1px solid var(--red)',
+                color: '#fff',
+                borderRadius: 6,
+                padding: '7px 16px',
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: 'pointer',
+                opacity: loading ? 0.5 : 1
+              }}
             >
-              {loading ? 'Speichern…' : 'Hinzufügen'}
+              {loading ? t('common.saving') : t('project.add')}
             </button>
           </div>
         </form>

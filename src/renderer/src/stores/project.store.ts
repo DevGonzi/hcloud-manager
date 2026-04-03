@@ -35,7 +35,11 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   addProject: async (name, apiKey, readonly) => {
     const result = await window.hcloud.storage.addProject({ name, apiKey, readonly })
     if (result.success) {
-      set(state => ({ projects: [...state.projects, result.data] }))
+      set((state) => ({
+        projects: [...state.projects, result.data],
+        // erstes projekt? direkt selecten
+        activeProjectId: state.activeProjectId ?? result.data.id
+      }))
     } else {
       set({ error: result.error })
     }
@@ -44,14 +48,14 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   removeProject: async (id) => {
     const result = await window.hcloud.storage.removeProject(id)
     if (result.success) {
-      set(state => ({
-        projects: state.projects.filter(p => p.id !== id),
-        activeProjectId: state.activeProjectId === id ? null : state.activeProjectId,
+      set((state) => ({
+        projects: state.projects.filter((p) => p.id !== id),
+        activeProjectId: state.activeProjectId === id ? null : state.activeProjectId
       }))
     } else {
       set({ error: result.error })
     }
   },
 
-  setActiveProject: (id) => set({ activeProjectId: id }),
+  setActiveProject: (id) => set({ activeProjectId: id })
 }))

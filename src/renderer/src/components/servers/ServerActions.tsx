@@ -10,14 +10,14 @@ export function ServerActions({ server, readonly, onAction }: Props) {
   const isRunning = server.status === 'running'
 
   const actions = [
-    { action: 'start' as const,    label: 'Start',   icon: '▶', disabled: isRunning },
-    { action: 'shutdown' as const, label: 'Stop',    icon: '⏹', disabled: !isRunning },
-    { action: 'reboot' as const,   label: 'Reboot',  icon: '↺', disabled: !isRunning },
+    { action: 'start' as const, label: 'Start', icon: '▶', disabled: isRunning },
+    { action: 'shutdown' as const, label: 'Stop', icon: '⏹', disabled: !isRunning },
+    { action: 'reboot' as const, label: 'Reboot', icon: '↺', disabled: !isRunning }
   ]
 
   return (
     <div className="grid grid-cols-3 gap-1.5">
-      {actions.map(a => (
+      {actions.map((a) => (
         <button
           key={a.action}
           disabled={readonly || a.disabled}

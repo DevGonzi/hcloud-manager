@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Server Console</title>
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src wss: ws:; img-src 'self' data: blob:; worker-src blob:;"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; background: #0c0d10; overflow: hidden; }
+      #status {
+        position: fixed; inset: 0;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+        background: #0c0d10; color: #8892a8; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
+      }
+      #status.hidden { display: none; }
+      #status.error { color: #d50c2d; }
+      .spinner { width: 32px; height: 32px; border: 3px solid #252a38; border-top-color: #d50c2d; border-radius: 50%; animation: spin 0.8s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      #toolbar {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        display: none; align-items: center; gap: 6px;
+        padding: 4px 8px;
+        background: rgba(17,19,24,0.92); border-bottom: 1px solid #252a38;
+        backdrop-filter: blur(4px);
+        font-family: 'IBM Plex Sans', sans-serif;
+      }
+      #toolbar.visible { display: flex; }
+      #toolbar button {
+        padding: 3px 10px; font-size: 11px; font-family: inherit;
+        background: #1e2230; border: 1px solid #252a38; border-radius: 4px;
+        color: #8892a8; cursor: pointer; transition: border-color 0.15s, color 0.15s;
+      }
+      #toolbar button:hover { border-color: #2e3548; color: #e2e6f0; }
+      #toolbar button.danger:hover { border-color: #d50c2d; color: #d50c2d; }
+      #toolbar .spacer { flex: 1; }
+      #toolbar .conn-info { font-size: 10px; color: #525e78; font-family: 'JetBrains Mono', monospace; }
+      #screen { width: 100%; height: 100%; padding-top: 0; }
+      #screen.with-toolbar { padding-top: 32px; }
+    </style>
+  </head>
+  <body>
+    <div id="status">
+      <div class="spinner"></div>
+      <p id="status-text">Verbinde mit Server...</p>
+    </div>
+    <div id="toolbar">
+      <button id="cad-btn" class="danger" title="Strg+Alt+Entf senden">Strg+Alt+Entf</button>
+      <button id="fullscreen-btn" title="Vollbild">⛶ Vollbild</button>
+      <div class="spacer"></div>
+      <span class="conn-info" id="conn-info"></span>
+    </div>
+    <div id="screen"></div>
+    <script type="module" src="/src/vnc.ts"></script>
+  </body>
+</html>
