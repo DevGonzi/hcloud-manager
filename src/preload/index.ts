@@ -81,7 +81,8 @@ const hcloud: HCloudApi = {
     getIsLocked: () => ipcRenderer.invoke('appconfig:getIsLocked'),
     onLockRequest: (cb: () => void) => {
       ipcRenderer.on('app:lock', () => cb())
-    }
+    },
+    resetPin: () => ipcRenderer.invoke('appconfig:resetPin')
   },
   window: {
     minimize: () => ipcRenderer.send('window:minimize'),

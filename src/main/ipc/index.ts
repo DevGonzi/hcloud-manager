@@ -19,6 +19,6 @@ export function registerAllHandlers(storage: ProjectStorage) {
   registerStorageHandlers(storage)
   registerApiHandlers(storage)
   registerActionLogHandlers()
-  registerAppConfigHandlers()
+  registerAppConfigHandlers(storage)
   registerWindowHandlers()
 }

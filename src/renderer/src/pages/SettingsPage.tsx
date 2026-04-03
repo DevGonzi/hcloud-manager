@@ -442,13 +442,13 @@ export function SettingsPage() {
                 )}
                 <div>
                   <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
-                    Neuer PIN (4 Ziffern)
+                    Neuer PIN (6 Ziffern)
                   </label>
                   <input
                     type="password"
                     value={newPin}
-                    onChange={(e) => setNewPin(e.target.value.slice(0, 4))}
-                    maxLength={4}
+                    onChange={(e) => setNewPin(e.target.value.slice(0, 6))}
+                    maxLength={6}
                     style={{
                       width: '100%',
                       padding: '6px 8px',
@@ -469,8 +469,8 @@ export function SettingsPage() {
                   <input
                     type="password"
                     value={confirmPin}
-                    onChange={(e) => setConfirmPin(e.target.value.slice(0, 4))}
-                    maxLength={4}
+                    onChange={(e) => setConfirmPin(e.target.value.slice(0, 6))}
+                    maxLength={6}
                     style={{
                       width: '100%',
                       padding: '6px 8px',
@@ -481,14 +481,14 @@ export function SettingsPage() {
                       color: 'var(--tx)',
                       fontFamily: 'monospace'
                     }}
-                    placeholder="••••"
+                    placeholder="••••••"
                   />
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
                     onClick={async () => {
-                      if (!newPin || !confirmPin || newPin !== confirmPin || newPin.length < 4) {
-                        alert('PINs müssen 4 Ziffern sein und übereinstimmen')
+                      if (!newPin || !confirmPin || newPin !== confirmPin || newPin.length < 6) {
+                        alert('PINs müssen 6 Ziffern sein und übereinstimmen')
                         return
                       }
                       if (hasPinSet && !oldPin) {

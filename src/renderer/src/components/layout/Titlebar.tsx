@@ -131,6 +131,13 @@ export function Titlebar() {
 
       <div style={{ flex: 1 }} />
 
+      <IconButton
+        onClick={() => window.hcloud.appconfig.lock()}
+        title="Lock (Strg+L)"
+      >
+        🔒
+      </IconButton>
+
       <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
         <ProjectSwitcher />
       </div>

@@ -34,7 +34,7 @@ export default function App() {
       }
     })
 
-    // Listen for global lock shortcut (Alt+L)
+    // Listen for global lock shortcut (Strg+L)
     window.hcloud.appconfig.onLockRequest(() => {
       setLocked(true)
     })

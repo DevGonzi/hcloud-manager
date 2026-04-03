@@ -52,6 +52,11 @@ export class ProjectStorage {
     this.save()
   }
 
+  removeAllProjects() {
+    this.records = []
+    this.save()
+  }
+
   renameProject(id: string, newName: string): Project | null {
     const record = this.records.find((r) => r.id === id)
     if (!record) return null

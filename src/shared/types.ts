@@ -349,6 +349,7 @@ export interface HCloudApi {
     unlock: () => Promise<IpcResult<void>>
     getIsLocked: () => Promise<IpcResult<boolean>>
     onLockRequest: (callback: () => void) => void
+    resetPin: () => Promise<IpcResult<void>>
   }
   window: {
     minimize: () => void

@@ -37,7 +37,7 @@ it's not perfect. it's open source. PRs welcome.
 - **ssh keys** - list, add, delete, copy fingerprint
 - **backups** - per-server backup management, enable/disable, delete individual backups
 - **i18n** - german and english, switches live
-- **security** - PIN protection with 6-digit code, persistent action log, auto-lock with Alt+L hotkey
+- **security** - PIN protection with 6-digit code, persistent action log, auto-lock with Ctrl+L hotkey
 
 ---
 
@@ -58,7 +58,7 @@ the app includes several security features to protect your infrastructure:
 ### PIN protection
 - **setup**: go to settings, set a 6-digit PIN. stored encrypted in `app-config.json`
 - **usage**: app locks on startup if PIN is set. unlock with your PIN to proceed
-- **hotkey**: press `Alt+L` or click the 🔒 button in the titlebar to lock at any time
+- **hotkey**: press `Ctrl+L` or click the 🔒 button in the titlebar to lock at any time
 - **action log**: all server actions (create, delete, start, stop, reboot, etc) are logged with timestamp, resource type, and result. persists across restarts in `actionlog.json`
 
 ### data protection

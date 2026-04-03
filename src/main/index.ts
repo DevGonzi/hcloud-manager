@@ -7,11 +7,16 @@ let storage: ProjectStorage | null = null
 let mainWindow: BrowserWindow | null = null
 
 function registerGlobalShortcuts() {
-  // Alt+L zum Sperren (Win+L wird von Windows intercepted)
-  globalShortcut.register('Alt+L', () => {
+  // Strg+L (Cmd+L auf Mac) zum Sperren
+  globalShortcut.register('CommandOrControl+L', () => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('app:lock')
     }
+  })
+
+  // Ctrl+R (Reload) deaktivieren
+  globalShortcut.register('CommandOrControl+R', () => {
+    // do nothing - reload disabled
   })
 }
 

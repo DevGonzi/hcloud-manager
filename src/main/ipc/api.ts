@@ -606,8 +606,11 @@ export function registerApiHandlers(storage: ProjectStorage) {
           width: 1024,
           height: 768,
           title: `Console — Server #${serverId}`,
+          autoHideMenuBar: true,
+          icon: path.join(__dirname, '../../build/icon.ico'),
           webPreferences: { contextIsolation: true, nodeIntegration: false, webSecurity: false }
         })
+        win.setMenu(null)
         const params = new URLSearchParams({ wss_url: creds.wss_url, password: creds.password })
         if (process.env['ELECTRON_RENDERER_URL']) {
           await win.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/vnc.html?${params}`)

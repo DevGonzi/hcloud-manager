@@ -1,8 +1,9 @@
 import { ipcMain } from 'electron'
 import { appConfig } from '../appconfig'
+import type { ProjectStorage } from '../storage'
 import type { IpcResult } from '../../shared/types'
 
-export function registerAppConfigHandlers() {
+export function registerAppConfigHandlers(storage: ProjectStorage) {
   ipcMain.handle('appconfig:getHasPinSet', (): IpcResult<boolean> => {
     try {
       return { success: true, data: appConfig.hasPinSet() }
@@ -76,6 +77,16 @@ export function registerAppConfigHandlers() {
   ipcMain.handle('appconfig:getIsLocked', (): IpcResult<boolean> => {
     try {
       return { success: true, data: appConfig.isAppLocked() }
+    } catch (e) {
+      return { success: false, error: String(e) }
+    }
+  })
+
+  ipcMain.handle('appconfig:resetPin', (): IpcResult<void> => {
+    try {
+      appConfig.clearPin()
+      storage.removeAllProjects()
+      return { success: true, data: undefined }
     } catch (e) {
       return { success: false, error: String(e) }
     }
