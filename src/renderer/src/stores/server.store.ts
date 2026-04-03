@@ -18,7 +18,7 @@ export const useServerStore = create<ServerState>((set) => ({
   error: null,
 
   loadServers: async (projectId) => {
-    set({ loading: true, error: null, servers: [] })
+    set({ loading: true, error: null })
     const result = await window.hcloud.api.getServers(projectId)
     if (result.success) {
       set((state) => ({

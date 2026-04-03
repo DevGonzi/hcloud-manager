@@ -394,7 +394,7 @@ export function ServersPage() {
     loadServers(activeProjectId)
     const timer = setInterval(() => {
       loadServers(activeProjectId)
-    }, 3000)
+    }, 30000)
     return () => clearInterval(timer)
   }, [activeProjectId, loadServers])
 
