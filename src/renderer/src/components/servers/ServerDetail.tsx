@@ -399,12 +399,6 @@ function OverviewTab({
 
   const actions = [
     {
-      key: isRunning ? 'shutdown' : 'start',
-      icon: isRunning ? '⏹' : '▶',
-      label: isRunning ? t('serverDetail.actionStop') : t('serverDetail.actionStart'),
-      color: isRunning ? '' : 'green'
-    },
-    {
       key: 'reboot' as const,
       icon: '↺',
       label: t('serverDetail.actionReboot'),
@@ -526,8 +520,8 @@ function OverviewTab({
             disabled={('disabled' in a && a.disabled) || readonly || loading !== null}
             color={'color' in a ? a.color : undefined}
             onClick={() =>
-              a.key === 'shutdown' || a.key === 'start' || a.key === 'reboot'
-                ? act(a.key as 'start' | 'shutdown' | 'reboot')
+              a.key === 'reboot'
+                ? act('reboot')
                 : undefined
             }
           />
