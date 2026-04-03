@@ -13,6 +13,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: hcloud-manager
+  icon: build/icon.ico
   target:
     - nsis
     - portable
@@ -21,6 +22,8 @@ nsis:
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
