@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import fs from 'fs'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import type { Plugin } from 'vite'
@@ -33,12 +33,13 @@ const noVncVitePlugin: Plugin = {
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    build: { minify: false }
   },
-  preload: {
-    plugins: [externalizeDepsPlugin()]
-  },
+  preload: {},
   renderer: {
+    define: {
+      'process.platform': JSON.stringify(process.platform)
+    },
     plugins: [react(), tailwindcss(), noVncVitePlugin],
     optimizeDeps: {
       include: ['@novnc/novnc/lib/rfb'],

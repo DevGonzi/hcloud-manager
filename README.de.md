@@ -4,6 +4,8 @@
 
 **[English Version](README.md)**
 
+![hcloud-manager Screenshot](docs/screenshot.png)
+
 ---
 
 ## was ist das hier
