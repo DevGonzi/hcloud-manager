@@ -12,6 +12,9 @@ files:
   - '!build/icon.png'
 asarUnpack:
   - resources/**
+extraResources:
+  - from: build/icon.ico
+    to: icon.ico
 win:
   executableName: hcloud-manager
   icon: build/icon.ico

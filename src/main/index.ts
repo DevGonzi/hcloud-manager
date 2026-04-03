@@ -39,9 +39,10 @@ function createWindow() {
   const w = Math.round(width * 0.75)
   const h = Math.round(height * 0.8)
 
-  // In production the icon comes from the exe's embedded PE resource (set by electron-builder).
-  // Only set it explicitly in dev mode where there's no exe to pull from.
-  const isDev = !!process.env['ELECTRON_RENDERER_URL']
+  // Dev: resolve relative to source. Prod: extraResources places icon.ico directly in resources/ (outside ASAR).
+  const iconPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'icon.ico')
+    : path.join(__dirname, '../../build/icon.ico')
 
   mainWindow = new BrowserWindow({
     width: Math.max(w, 1200),
@@ -50,7 +51,7 @@ function createWindow() {
     minHeight: 600,
     frame: false,
     titleBarStyle: 'hidden',
-    ...(isDev ? { icon: path.join(__dirname, '../../build/icon.ico') } : {}),
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
