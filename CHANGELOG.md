@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 
 ---
 
+## [0.1.3] - 2026-04-03
+
+### Fixed
+- **Window icon in production** — icon.ico is now placed outside ASAR via `extraResources` so Windows can actually read it
+- **Slow startup** — electron-updater was required synchronously at module load; moved to `setImmediate` after window creation so the UI loads first
+
+---
+
 ## [0.1.2] - 2026-04-03
 
 ### Added

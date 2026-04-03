@@ -3,16 +3,6 @@ import path from 'path'
 import { ProjectStorage } from './storage'
 import { registerAllHandlers } from './ipc'
 
-// Auto-Updater im Production & mit Config-Force
-let autoUpdater: any = null
-try {
-  const { autoUpdater: updater } = require('electron-updater')
-  autoUpdater = updater
-  autoUpdater.forceDevUpdateConfig = !!process.env.DEV_UPDATE_CHECK // Force in Dev mit DEV_UPDATE_CHECK=true
-} catch (e) {
-  console.log('electron-updater not available')
-}
-
 let storage: ProjectStorage | null = null
 export let mainWindow: BrowserWindow | null = null
 
@@ -78,10 +68,16 @@ app.whenReady().then(() => {
   registerGlobalShortcuts()
   createWindow()
 
-  // Auto-Updates checken
-  if (autoUpdater) {
-    autoUpdater.checkForUpdates()
-  }
+  // Auto-Updates nach dem Fenster laden — nicht blockierend
+  setImmediate(() => {
+    try {
+      const { autoUpdater } = require('electron-updater')
+      autoUpdater.forceDevUpdateConfig = !!process.env.DEV_UPDATE_CHECK
+      autoUpdater.checkForUpdatesAndNotify()
+    } catch {
+      // electron-updater not available in dev without config
+    }
+  })
 
   app.on('activate', () => {
     if (!mainWindow) createWindow()
