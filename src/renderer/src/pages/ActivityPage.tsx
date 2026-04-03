@@ -91,8 +91,7 @@ export function ActivityPage() {
                     key={entry.id}
                     style={{
                       borderBottom: '1px solid var(--bdr)',
-                      background: entry.status === 'error' ? 'rgba(255,0,0,0.05)' : undefined,
-                      '&:hover': { background: 'var(--bg3)' }
+                      background: entry.status === 'error' ? 'rgba(255,0,0,0.05)' : undefined
                     }}
                   >
                     <td
