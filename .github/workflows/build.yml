@@ -13,7 +13,7 @@ jobs:
         include:
           - os: macos-latest
             artifact: dist/*.dmg
-            name: macos
+            name: mac
           - os: ubuntu-latest
             artifact: dist/*.AppImage
             name: linux
