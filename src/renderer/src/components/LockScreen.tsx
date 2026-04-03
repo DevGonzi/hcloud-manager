@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { Lock, AlertTriangle, X } from 'lucide-react'
 
 interface LockScreenProps {
   onUnlock: () => void
@@ -91,7 +92,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
           WebkitAppRegion: 'drag'
         } as React.CSSProperties}
       >
-        <div style={{ fontSize: 12, color: 'var(--tx2)', fontWeight: 500 }}>🔐 Gesperrt</div>
+        <div style={{ fontSize: 12, color: 'var(--tx2)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6 }}><Lock size={13} /> Gesperrt</div>
         <button
           onClick={() => window.hcloud.window.close()}
           style={{
@@ -100,7 +101,6 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
             background: 'none',
             border: 'none',
             color: 'var(--tx3)',
-            fontSize: 18,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -109,7 +109,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
             WebkitAppRegion: 'no-drag'
           } as React.CSSProperties}
         >
-          ✕
+          <X size={14} />
         </button>
       </div>
 
@@ -134,7 +134,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
               textAlign: 'center'
             }}
           >
-            <div style={{ fontSize: 36 }}>⚠️</div>
+            <div style={{ color: 'var(--red)' }}><AlertTriangle size={36} /></div>
             <p style={{ color: 'var(--tx)', fontSize: 14, fontWeight: 600, margin: 0 }}>
               PIN zurücksetzen?
             </p>

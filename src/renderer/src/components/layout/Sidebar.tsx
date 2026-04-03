@@ -1,8 +1,21 @@
 import { useState } from 'react'
+import {
+  Server,
+  Camera,
+  Box,
+  Network,
+  Shield,
+  Globe,
+  Scale,
+  HardDrive,
+  Key,
+  ClipboardList,
+  Settings
+} from 'lucide-react'
 import { useT } from '../../i18n/useT'
 
 interface NavItem {
-  icon: string
+  icon: React.ReactNode
   label: string
   section: string
 }
@@ -20,25 +33,25 @@ export function Sidebar({ activeSection, onSectionChange, serverCount }: Props) 
     {
       label: t('nav.compute'),
       items: [
-        { icon: '▣', label: t('nav.servers'), section: 'servers' },
-        { icon: '◫', label: t('nav.snapshots'), section: 'snapshots' },
-        { icon: '⊞', label: t('nav.images'), section: 'images' }
+        { icon: <Server size={14} />, label: t('nav.servers'), section: 'servers' },
+        { icon: <Camera size={14} />, label: t('nav.snapshots'), section: 'snapshots' },
+        { icon: <Box size={14} />, label: t('nav.images'), section: 'images' }
       ]
     },
     {
       label: t('nav.networking'),
       items: [
-        { icon: '⊗', label: t('nav.networks'), section: 'networks' },
-        { icon: '◈', label: t('nav.firewalls'), section: 'firewalls' },
-        { icon: '◉', label: t('nav.floatingIps'), section: 'floating-ips' },
-        { icon: '⊕', label: t('nav.loadBalancers'), section: 'load-balancers' }
+        { icon: <Network size={14} />, label: t('nav.networks'), section: 'networks' },
+        { icon: <Shield size={14} />, label: t('nav.firewalls'), section: 'firewalls' },
+        { icon: <Globe size={14} />, label: t('nav.floatingIps'), section: 'floating-ips' },
+        { icon: <Scale size={14} />, label: t('nav.loadBalancers'), section: 'load-balancers' }
       ]
     },
     {
       label: t('nav.storageAccess'),
       items: [
-        { icon: '◧', label: t('nav.volumes'), section: 'volumes' },
-        { icon: '⊡', label: t('nav.sshKeys'), section: 'ssh-keys' }
+        { icon: <HardDrive size={14} />, label: t('nav.volumes'), section: 'volumes' },
+        { icon: <Key size={14} />, label: t('nav.sshKeys'), section: 'ssh-keys' }
       ]
     }
   ]
@@ -84,12 +97,12 @@ export function Sidebar({ activeSection, onSectionChange, serverCount }: Props) 
 
       <div style={{ marginTop: 'auto', borderTop: '1px solid var(--bdr)', padding: '8px 0' }}>
         <NavLink
-          item={{ icon: '📋', label: 'Activity', section: 'activity' }}
+          item={{ icon: <ClipboardList size={14} />, label: 'Activity', section: 'activity' }}
           active={activeSection === 'activity'}
           onClick={() => onSectionChange('activity')}
         />
         <NavLink
-          item={{ icon: '⚙', label: t('nav.settings'), section: 'settings' }}
+          item={{ icon: <Settings size={14} />, label: t('nav.settings'), section: 'settings' }}
           active={activeSection === 'settings'}
           onClick={() => onSectionChange('settings')}
         />

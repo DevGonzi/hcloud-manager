@@ -259,7 +259,7 @@ export function FirewallsPage() {
               padding: '6px 12px'
             }}
           >
-            <span style={{ fontSize: 12, color: 'var(--tx3)' }}>🔍</span>
+            <span style={{ display: 'flex', alignItems: 'center', color: 'var(--tx3)' }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
             <input
               type="text"
               placeholder={t('firewalls.search')}

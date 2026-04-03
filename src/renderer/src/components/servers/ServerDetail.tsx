@@ -147,7 +147,7 @@ function VncButton({
             flexShrink: 0
           }}
         >
-          ⌨
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
         </div>
         <div style={{ textAlign: 'left', flex: 1 }}>
           <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--tx)' }}>
@@ -412,7 +412,7 @@ function OverviewTab({
     },
     { key: 'rebuild', icon: '⊞', label: t('serverDetail.actionRebuild'), disabled: true },
     { key: 'resize', icon: '⤢', label: t('serverDetail.actionResize'), disabled: true },
-    { key: 'resetpw', icon: '🔑', label: t('serverDetail.actionResetPw'), disabled: true },
+    { key: 'resetpw', icon: '⊙', label: t('serverDetail.actionResetPw'), disabled: true },
     {
       key: 'delete',
       icon: '✕',

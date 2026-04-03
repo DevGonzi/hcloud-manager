@@ -302,7 +302,7 @@ function FloatingIpDetail({
             {floatingIp.ip}
           </div>
           <div style={{ fontSize: 10, color: 'var(--tx3)', marginTop: 2 }}>
-            {floatingIp.blocked ? '🔒 Blocked' : '✓ Aktiv'}
+            {floatingIp.blocked ? 'Blocked' : '✓ Aktiv'}
           </div>
         </div>
 

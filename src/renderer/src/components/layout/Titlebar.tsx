@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Lock, Minus, Maximize2, X, RotateCw } from 'lucide-react'
 import hetznerLogo from '../../assets/hetzner.png'
 import { useProjectStore } from '../../stores/project.store'
 import { useServerStore } from '../../stores/server.store'
@@ -111,20 +112,20 @@ export function Titlebar() {
             onClick={() => window.hcloud.window.minimize()}
             title={t('titlebar.minimize')}
           >
-            ─
+            <Minus size={12} />
           </IconButton>
           <IconButton
             onClick={() => window.hcloud.window.maximize()}
             title={t('titlebar.maximize')}
           >
-            ▭
+            <Maximize2 size={12} />
           </IconButton>
           <IconButton
             onClick={() => window.hcloud.window.close()}
             title={t('titlebar.close')}
             isClose
           >
-            ✕
+            <X size={12} />
           </IconButton>
         </div>
       )}
@@ -135,7 +136,7 @@ export function Titlebar() {
         onClick={() => window.hcloud.appconfig.lock()}
         title="Lock (Strg+L)"
       >
-        🔒
+        <Lock size={13} />
       </IconButton>
 
       <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
@@ -146,7 +147,7 @@ export function Titlebar() {
         onClick={() => activeProjectId && loadServers(activeProjectId)}
         title={t('common.refresh')}
       >
-        ↺
+        <RotateCw size={13} />
       </IconButton>
 
       {process.platform !== 'darwin' && (
@@ -165,20 +166,20 @@ export function Titlebar() {
             onClick={() => window.hcloud.window.minimize()}
             title={t('titlebar.minimize')}
           >
-            ─
+            <Minus size={12} />
           </IconButton>
           <IconButton
             onClick={() => window.hcloud.window.maximize()}
             title={t('titlebar.maximize')}
           >
-            ▭
+            <Maximize2 size={12} />
           </IconButton>
           <IconButton
             onClick={() => window.hcloud.window.close()}
             title={t('titlebar.close')}
             isClose
           >
-            ✕
+            <X size={12} />
           </IconButton>
         </div>
       )}

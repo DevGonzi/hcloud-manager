@@ -368,14 +368,14 @@ export function SettingsPage() {
             ))}
             <div style={divider} />
             <div style={{ padding: '6px 0', fontSize: 11, color: 'var(--tx3)' }}>
-              Made with ❤️ by DevGonzi from Gonzi.Tech
+              Made with ♥ by DevGonzi from Gonzi.Tech
             </div>
           </div>
         </section>
 
         {/* PIN Protection */}
         <section>
-          <div style={sectionLabel}>🔒 PIN {t('common.security') || 'Schutz'}</div>
+          <div style={sectionLabel}>PIN {t('common.security') || 'Schutz'}</div>
           {!showPinForm && (
             <div style={card}>
               <div
@@ -386,7 +386,7 @@ export function SettingsPage() {
                 }}
               >
                 <span style={{ fontSize: 12, color: 'var(--tx2)' }}>
-                  PIN ist {hasPinSet ? '✅ aktiv' : '❌ inaktiv'}
+                  PIN ist {hasPinSet ? 'aktiv' : 'inaktiv'}
                 </span>
                 <button
                   onClick={() => setShowPinForm(true)}
