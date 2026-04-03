@@ -27,14 +27,9 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies (Windows)
-        if: matrix.os == 'windows-latest'
+      - name: Install dependencies
         run: Remove-Item -ErrorAction SilentlyContinue package-lock.json; npm install
         shell: pwsh
-
-      - name: Install dependencies
-        if: matrix.os != 'windows-latest'
-        run: npm install
 
       - name: Build & Publish
         run: npm run ${{ matrix.script }} -- --publish always
