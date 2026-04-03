@@ -136,7 +136,7 @@ export function Titlebar() {
         onClick={() => window.hcloud.appconfig.lock()}
         title="Lock (Strg+L)"
       >
-        <Lock size={13} />
+        <Lock size={14} strokeWidth={1.5} />
       </IconButton>
 
       <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>

@@ -80,7 +80,12 @@ const hcloud: HCloudApi = {
     unlock: () => ipcRenderer.invoke('appconfig:unlock'),
     getIsLocked: () => ipcRenderer.invoke('appconfig:getIsLocked'),
     onLockRequest: (cb: () => void) => {
+      ipcRenderer.removeAllListeners('app:lock')
       ipcRenderer.on('app:lock', () => cb())
+    },
+    onReset: (cb: () => void) => {
+      ipcRenderer.removeAllListeners('app:reset')
+      ipcRenderer.on('app:reset', () => cb())
     },
     resetPin: () => ipcRenderer.invoke('appconfig:resetPin')
   },
