@@ -10,6 +10,17 @@ export interface AddProjectInput {
   readonly: boolean
 }
 
+export interface ActionLogEntry {
+  id: string
+  timestamp: string
+  projectId: string
+  resource: string
+  action: string
+  label: string
+  status: 'success' | 'error'
+  error?: string
+}
+
 export type ServerStatus =
   | 'running'
   | 'initializing'
@@ -254,6 +265,7 @@ export interface HCloudApi {
     getProjects: () => Promise<IpcResult<Project[]>>
     addProject: (input: AddProjectInput) => Promise<IpcResult<Project>>
     removeProject: (id: string) => Promise<IpcResult<void>>
+    renameProject: (id: string, newName: string) => Promise<IpcResult<Project>>
   }
   api: {
     getServers: (projectId: string) => Promise<IpcResult<HCloudServer[]>>
@@ -321,6 +333,10 @@ export interface HCloudApi {
     list: (projectId: string) => Promise<IpcResult<HCloudSshKey[]>>
     delete: (projectId: string, keyId: number) => Promise<IpcResult<void>>
     create: (projectId: string, input: CreateSshKeyInput) => Promise<IpcResult<HCloudSshKey>>
+  }
+  actionlog: {
+    getAll: () => Promise<IpcResult<ActionLogEntry[]>>
+    onEntry: (callback: (entry: ActionLogEntry) => void) => void
   }
   window: {
     minimize: () => void

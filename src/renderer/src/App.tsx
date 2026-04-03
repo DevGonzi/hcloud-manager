@@ -11,6 +11,7 @@ import { LoadBalancersPage } from './pages/LoadBalancersPage'
 import { VolumesPage } from './pages/VolumesPage'
 import { SshKeysPage } from './pages/SshKeysPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { ActivityPage } from './pages/ActivityPage'
 import { useProjectStore } from './stores/project.store'
 import { useServerStore } from './stores/server.store'
 
@@ -43,6 +44,7 @@ export default function App() {
         {activeSection === 'load-balancers' && <LoadBalancersPage />}
         {activeSection === 'volumes' && <VolumesPage />}
         {activeSection === 'ssh-keys' && <SshKeysPage />}
+        {activeSection === 'activity' && <ActivityPage />}
         {activeSection === 'settings' && <SettingsPage />}
       </Layout>
     </LangProvider>

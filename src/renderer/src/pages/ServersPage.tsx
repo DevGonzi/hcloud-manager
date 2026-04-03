@@ -388,6 +388,16 @@ export function ServersPage() {
     .map((s) => s.id)
     .join(',')
 
+  // Auto-reload alle 3 Sekunden
+  useEffect(() => {
+    if (!activeProjectId) return
+    loadServers(activeProjectId)
+    const timer = setInterval(() => {
+      loadServers(activeProjectId)
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [activeProjectId, loadServers])
+
   useEffect(() => {
     if (!activeProjectId || !runningIdsKey) return
     const runningIds = runningIdsKey.split(',').map(Number)

@@ -11,9 +11,11 @@ export function ProjectSwitcher() {
   const [buttonHovered, setButtonHovered] = useState(false)
   const [addRowHovered, setAddRowHovered] = useState(false)
   const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
   const ref = useRef<HTMLDivElement>(null)
 
-  const { projects, activeProjectId, setActiveProject } = useProjectStore()
+  const { projects, activeProjectId, setActiveProject, renameProject } = useProjectStore()
   const loadServers = useServerStore((s) => s.loadServers)
 
   const active = projects.find((p) => p.id === activeProjectId)
@@ -22,6 +24,18 @@ export function ProjectSwitcher() {
     setActiveProject(id)
     loadServers(id)
     setOpen(false)
+  }
+
+  function startEditing(id: string, name: string) {
+    setEditingId(id)
+    setEditName(name)
+  }
+
+  async function finishEditing(id: string) {
+    if (editName.trim()) {
+      await renameProject(id, editName)
+    }
+    setEditingId(null)
   }
 
   useEffect(() => {
@@ -111,9 +125,8 @@ export function ProjectSwitcher() {
             </div>
 
             {projects.map((p) => (
-              <button
+              <div
                 key={p.id}
-                onClick={() => select(p.id)}
                 onMouseEnter={() => setHoveredProjectId(p.id)}
                 onMouseLeave={() => setHoveredProjectId(null)}
                 style={{
@@ -121,7 +134,6 @@ export function ProjectSwitcher() {
                   alignItems: 'center',
                   gap: 8,
                   padding: '8px 12px',
-                  cursor: 'pointer',
                   fontSize: 12,
                   color: 'var(--tx)',
                   width: '100%',
@@ -130,21 +142,81 @@ export function ProjectSwitcher() {
                       ? 'var(--red-glow)'
                       : hoveredProjectId === p.id
                         ? 'var(--bg4)'
-                        : 'transparent',
-                  border: 'none',
-                  textAlign: 'left'
+                        : 'transparent'
                 }}
               >
-                <span
+                <button
+                  onClick={() => select(p.id)}
                   style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    flexShrink: 0,
-                    background: p.id === activeProjectId ? 'var(--green)' : 'var(--tx3)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    cursor: 'pointer',
+                    flex: 1,
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    color: 'inherit',
+                    fontSize: 'inherit',
+                    textAlign: 'left'
                   }}
-                />
-                <span style={{ flex: 1 }}>{p.name}</span>
+                >
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      flexShrink: 0,
+                      background: p.id === activeProjectId ? 'var(--green)' : 'var(--tx3)'
+                    }}
+                  />
+                  {editingId === p.id ? (
+                    <input
+                      autoFocus
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') finishEditing(p.id)
+                        if (e.key === 'Escape') setEditingId(null)
+                      }}
+                      onBlur={() => finishEditing(p.id)}
+                      style={{
+                        flex: 1,
+                        background: 'var(--bg2)',
+                        border: '1px solid var(--bdr2)',
+                        borderRadius: 4,
+                        padding: '2px 6px',
+                        color: 'var(--tx)',
+                        fontSize: 12,
+                        outline: 'none'
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  ) : (
+                    <span style={{ flex: 1 }}>{p.name}</span>
+                  )}
+                </button>
+                {hoveredProjectId === p.id && editingId !== p.id && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      startEditing(p.id, p.name)
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--tx3)',
+                      fontSize: 12,
+                      padding: '2px 4px',
+                      flexShrink: 0
+                    }}
+                    title={t('common.edit')}
+                  >
+                    ✎
+                  </button>
+                )}
                 {p.readonly && (
                   <span
                     style={{
@@ -154,13 +226,14 @@ export function ProjectSwitcher() {
                       color: 'var(--bg1)',
                       borderRadius: 3,
                       padding: '1px 4px',
-                      fontFamily: 'JetBrains Mono, monospace'
+                      fontFamily: 'JetBrains Mono, monospace',
+                      flexShrink: 0
                     }}
                   >
                     R
                   </span>
                 )}
-              </button>
+              </div>
             ))}
 
             <button

@@ -5,7 +5,8 @@ const hcloud: HCloudApi = {
   storage: {
     getProjects: () => ipcRenderer.invoke('storage:getProjects'),
     addProject: (input) => ipcRenderer.invoke('storage:addProject', input),
-    removeProject: (id) => ipcRenderer.invoke('storage:removeProject', id)
+    removeProject: (id) => ipcRenderer.invoke('storage:removeProject', id),
+    renameProject: (id, newName) => ipcRenderer.invoke('storage:renameProject', id, newName)
   },
   api: {
     getServers: (projectId) => ipcRenderer.invoke('api:getServers', projectId),
@@ -61,6 +62,12 @@ const hcloud: HCloudApi = {
     list: (projectId) => ipcRenderer.invoke('sshKeys:list', projectId),
     delete: (projectId, keyId) => ipcRenderer.invoke('sshKeys:delete', projectId, keyId),
     create: (projectId, input) => ipcRenderer.invoke('sshKeys:create', projectId, input)
+  },
+  actionlog: {
+    getAll: () => ipcRenderer.invoke('actionlog:getAll'),
+    onEntry: (cb: (entry: any) => void) => {
+      ipcRenderer.on('actionlog:entry', (_e, entry) => cb(entry))
+    }
   },
   window: {
     minimize: () => ipcRenderer.send('window:minimize'),

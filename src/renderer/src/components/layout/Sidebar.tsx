@@ -84,6 +84,11 @@ export function Sidebar({ activeSection, onSectionChange, serverCount }: Props) 
 
       <div style={{ marginTop: 'auto', borderTop: '1px solid var(--bdr)', padding: '8px 0' }}>
         <NavLink
+          item={{ icon: '📋', label: 'Activity', section: 'activity' }}
+          active={activeSection === 'activity'}
+          onClick={() => onSectionChange('activity')}
+        />
+        <NavLink
           item={{ icon: '⚙', label: t('nav.settings'), section: 'settings' }}
           active={activeSection === 'settings'}
           onClick={() => onSectionChange('settings')}

@@ -3,6 +3,7 @@ import path from 'path'
 import { HCloudClient } from '../hcloud/client'
 import type { ProjectStorage } from '../storage'
 import { cache } from '../cache'
+import { actionLog } from '../actionlog'
 import type {
   HCloudServer,
   HCloudMetrics,
@@ -28,7 +29,7 @@ import type {
   CreateServerInput
 } from '../../shared/types'
 
-const TTL = { servers: 30, server: 15, metrics: 30 }
+const TTL = { servers: 2, server: 15, metrics: 30 }
 
 function getClient(storage: ProjectStorage, projectId: string): HCloudClient | null {
   const key = storage.getApiKey(projectId)
@@ -86,11 +87,34 @@ export function registerApiHandlers(storage: ProjectStorage) {
         if (project?.readonly) return { success: false, error: 'Projekt ist readonly' }
         const client = getClient(storage, projectId)
         if (!client) return { success: false, error: 'Projekt nicht gefunden' }
+
+        // Get server name for logging
+        const server = await client.getServer(serverId)
+        const label = server.name
+
         await client.serverAction(serverId, action)
         cache.invalidatePrefix(`${projectId}:server`)
+
+        actionLog.push({
+          projectId,
+          resource: 'server',
+          action,
+          label,
+          status: 'success'
+        })
+
         return { success: true, data: undefined }
       } catch (e) {
-        return { success: false, error: String(e) }
+        const errorMsg = String(e)
+        actionLog.push({
+          projectId,
+          resource: 'server',
+          action,
+          label: `#${serverId}`,
+          status: 'error',
+          error: errorMsg
+        })
+        return { success: false, error: errorMsg }
       }
     }
   )

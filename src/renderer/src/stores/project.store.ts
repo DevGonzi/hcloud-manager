@@ -9,6 +9,7 @@ interface ProjectState {
   loadProjects: () => Promise<void>
   addProject: (name: string, apiKey: string, readonly: boolean) => Promise<void>
   removeProject: (id: string) => Promise<void>
+  renameProject: (id: string, newName: string) => Promise<void>
   setActiveProject: (id: string) => void
 }
 
@@ -51,6 +52,17 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       set((state) => ({
         projects: state.projects.filter((p) => p.id !== id),
         activeProjectId: state.activeProjectId === id ? null : state.activeProjectId
+      }))
+    } else {
+      set({ error: result.error })
+    }
+  },
+
+  renameProject: async (id, newName) => {
+    const result = await window.hcloud.storage.renameProject(id, newName)
+    if (result.success) {
+      set((state) => ({
+        projects: state.projects.map((p) => (p.id === id ? { ...p, name: newName } : p))
       }))
     } else {
       set({ error: result.error })

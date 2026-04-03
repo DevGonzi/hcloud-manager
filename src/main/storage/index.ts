@@ -52,6 +52,14 @@ export class ProjectStorage {
     this.save()
   }
 
+  renameProject(id: string, newName: string): Project | null {
+    const record = this.records.find((r) => r.id === id)
+    if (!record) return null
+    record.name = newName
+    this.save()
+    return { id: record.id, name: record.name, readonly: record.readonly }
+  }
+
   getApiKey(id: string): string | null {
     const r = this.records.find((r) => r.id === id)
     if (!r) return null

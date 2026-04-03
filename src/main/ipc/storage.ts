@@ -27,4 +27,14 @@ export function registerStorageHandlers(storage: ProjectStorage) {
       return { success: false, error: String(e) }
     }
   })
+
+  ipcMain.handle('storage:renameProject', (_e, id: string, newName: string): IpcResult<Project> => {
+    try {
+      const result = storage.renameProject(id, newName)
+      if (!result) return { success: false, error: 'Projekt nicht gefunden' }
+      return { success: true, data: result }
+    } catch (e) {
+      return { success: false, error: String(e) }
+    }
+  })
 }

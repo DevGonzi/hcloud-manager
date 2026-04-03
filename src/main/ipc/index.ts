@@ -2,6 +2,7 @@ import { ipcMain, BrowserWindow } from 'electron'
 import type { ProjectStorage } from '../storage'
 import { registerStorageHandlers } from './storage'
 import { registerApiHandlers } from './api'
+import { registerActionLogHandlers } from './actionlog'
 
 function registerWindowHandlers() {
   ipcMain.on('window:minimize', (e) => BrowserWindow.fromWebContents(e.sender)?.minimize())
@@ -16,5 +17,6 @@ function registerWindowHandlers() {
 export function registerAllHandlers(storage: ProjectStorage) {
   registerStorageHandlers(storage)
   registerApiHandlers(storage)
+  registerActionLogHandlers()
   registerWindowHandlers()
 }
