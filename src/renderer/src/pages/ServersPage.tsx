@@ -375,6 +375,7 @@ export function ServersPage() {
   const [cpuMap, setCpuMap] = useState<Record<number, number>>({})
   const [pollInterval, setPollInterval] = useState(30)
   const [showCreate, setShowCreate] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
 
   const { servers, loading, error, selectedServerId, selectServer, loadServers } = useServerStore()
   const { activeProjectId, projects } = useProjectStore()
@@ -437,8 +438,18 @@ export function ServersPage() {
 
   async function handleAction(serverId: number, action: 'start' | 'shutdown' | 'reboot') {
     if (!activeProjectId || readonly) return
-    await window.hcloud.api.serverAction(activeProjectId, serverId, action)
-    loadServers(activeProjectId)
+    try {
+      const res = await window.hcloud.api.serverAction(activeProjectId, serverId, action)
+      if (res.success) {
+        setToast({ type: 'success', msg: `Server ${action} erfolgreich` })
+        await loadServers(activeProjectId)
+      } else {
+        setToast({ type: 'error', msg: res.error || `${action} fehlgeschlagen` })
+      }
+    } catch (err) {
+      setToast({ type: 'error', msg: `Fehler: ${err instanceof Error ? err.message : String(err)}` })
+    }
+    setTimeout(() => setToast(null), 3000)
   }
 
   return (
@@ -729,8 +740,28 @@ export function ServersPage() {
           onSuccess={() => {
             setShowCreate(false)
             loadServers(activeProjectId)
+            setToast({ type: 'success', msg: 'Server erstellt' })
+            setTimeout(() => setToast(null), 3000)
           }}
         />
+      )}
+
+      {toast && (
+        <div style={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          background: toast.type === 'success' ? 'var(--green)' : 'var(--red)',
+          color: '#fff',
+          padding: '12px 16px',
+          borderRadius: 8,
+          fontSize: 12,
+          fontWeight: 500,
+          zIndex: 2000,
+          animation: 'slideIn 0.2s ease'
+        }}>
+          {toast.msg}
+        </div>
       )}
     </div>
   )
