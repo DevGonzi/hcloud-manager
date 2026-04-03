@@ -56,12 +56,14 @@ use my referral link - you get 20€ credits and i get some too:
 the app includes several security features to protect your infrastructure:
 
 ### PIN protection
+
 - **setup**: go to settings, set a 6-digit PIN. stored encrypted in `app-config.json`
 - **usage**: app locks on startup if PIN is set. unlock with your PIN to proceed
 - **hotkey**: press `Ctrl+L` or click the 🔒 button in the titlebar to lock at any time
 - **action log**: all server actions (create, delete, start, stop, reboot, etc) are logged with timestamp, resource type, and result. persists across restarts in `actionlog.json`
 
 ### data protection
+
 - **api keys**: hetzner api keys stored encrypted via electron's `safeStorage` mechanism (os-level encryption on windows/mac/linux)
 - **readonly mode**: per-project flag that disables all write actions - useful for shared environments or monitoring-only access
 
@@ -145,10 +147,16 @@ bug reports: open an issue. steps to reproduce appreciated. "it doesn't work" le
 
 ---
 
-## license
+## support
 
-MIT. do whatever.
+If hcloud-manager saves you time, a coffee is appreciated ☕
+
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/devgonzi)
+
+[![Ko-Fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/devgonzi)
 
 ---
 
-_– [gonzi](https://github.com/DevGonzi)_
+## license
+
+MIT. do whatever. – [gonzi](https://github.com/DevGonzi)_

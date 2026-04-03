@@ -146,6 +146,16 @@ bugs: issue aufmachen. reproduktionsschritte helfen enorm. "geht nicht" weniger.
 
 ---
 
+## unterstützung
+
+Wenn hcloud-manager dir Zeit spart, freue ich mich über einen Kaffee ☕
+
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/devgonzi)
+
+[![Ko-Fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/devgonzi)
+
+---
+
 ## lizenz
 
 MIT. mach was du willst.
