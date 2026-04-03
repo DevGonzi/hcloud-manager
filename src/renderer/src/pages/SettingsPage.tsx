@@ -395,7 +395,7 @@ export function SettingsPage() {
                   opacity: updateStatus === 'checking' ? 0.6 : 1
                 }}
               >
-                {updateStatus === 'checking' ? 'Prüfe…' : updateStatus === 'done' ? '✓ Aktuell' : updateStatus === 'error' ? 'Fehler' : 'Auf Updates prüfen'}
+                {updateStatus === 'checking' ? t('settings.checkingForUpdates') : updateStatus === 'done' ? t('settings.upToDate') : updateStatus === 'error' ? t('settings.updateError') : t('settings.checkForUpdates')}
               </button>
             </div>
           </div>
@@ -403,7 +403,7 @@ export function SettingsPage() {
 
         {/* PIN Protection */}
         <section>
-          <div style={sectionLabel}>PIN {t('common.security') || 'Schutz'}</div>
+          <div style={sectionLabel}>{t('settings.pinProtection')}</div>
           {!showPinForm && (
             <div style={card}>
               <div
@@ -414,7 +414,7 @@ export function SettingsPage() {
                 }}
               >
                 <span style={{ fontSize: 12, color: 'var(--tx2)' }}>
-                  PIN ist {hasPinSet ? 'aktiv' : 'inaktiv'}
+                  PIN — {hasPinSet ? t('settings.pinActive') : t('settings.pinInactive')}
                 </span>
                 <button
                   onClick={() => setShowPinForm(true)}
@@ -436,7 +436,7 @@ export function SettingsPage() {
                     ;(e.target as HTMLElement).style.color = 'var(--tx2)'
                   }}
                 >
-                  {hasPinSet ? 'Ändern' : 'Setzen'}
+                  {hasPinSet ? t('settings.pinChange') : t('settings.pinSet')}
                 </button>
               </div>
             </div>
@@ -448,7 +448,7 @@ export function SettingsPage() {
                 {hasPinSet && (
                   <div>
                     <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
-                      Alter PIN
+                      {t('settings.pinOldLabel')}
                     </label>
                     <input
                       type="password"
@@ -470,7 +470,7 @@ export function SettingsPage() {
                 )}
                 <div>
                   <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
-                    Neuer PIN (6 Ziffern)
+                    {t('settings.pinNewLabel')}
                   </label>
                   <input
                     type="password"
@@ -487,12 +487,12 @@ export function SettingsPage() {
                       color: 'var(--tx)',
                       fontFamily: 'monospace'
                     }}
-                    placeholder="••••"
+                    placeholder="••••••"
                   />
                 </div>
                 <div>
                   <label style={{ fontSize: 10, color: 'var(--tx3)', display: 'block', marginBottom: 4 }}>
-                    PIN bestätigen
+                    {t('settings.pinConfirmLabel')}
                   </label>
                   <input
                     type="password"
@@ -516,17 +516,17 @@ export function SettingsPage() {
                   <button
                     onClick={async () => {
                       if (!newPin || !confirmPin || newPin !== confirmPin || newPin.length < 6) {
-                        alert('PINs müssen 6 Ziffern sein und übereinstimmen')
+                        alert(t('settings.pinErrorLength'))
                         return
                       }
                       if (hasPinSet && !oldPin) {
-                        alert('Alter PIN erforderlich')
+                        alert(t('settings.pinErrorOldRequired'))
                         return
                       }
                       if (hasPinSet) {
                         const verified = await window.hcloud.appconfig.verifyPin(oldPin)
                         if (!verified.success || !verified.data) {
-                          alert('Alter PIN ist falsch')
+                          alert(t('settings.pinErrorOldWrong'))
                           return
                         }
                       }
@@ -537,7 +537,7 @@ export function SettingsPage() {
                         setConfirmPin('')
                         setOldPin('')
                         setShowPinForm(false)
-                        alert('PIN gespeichert!')
+                        alert(t('settings.pinSaved'))
                       }
                     }}
                     style={{
@@ -551,7 +551,7 @@ export function SettingsPage() {
                       cursor: 'pointer'
                     }}
                   >
-                    Speichern
+                    {t('settings.pinSave')}
                   </button>
                   <button
                     onClick={() => {
@@ -571,7 +571,7 @@ export function SettingsPage() {
                       cursor: 'pointer'
                     }}
                   >
-                    Abbrechen
+                    {t('settings.pinCancel')}
                   </button>
                 </div>
               </div>

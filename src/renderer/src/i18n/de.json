@@ -281,7 +281,25 @@
     "version": "Version",
     "api": "API",
     "cacheTtl": "Cache TTL (Server)",
-    "language": "Sprache"
+    "language": "Sprache",
+    "checkForUpdates": "Auf Updates prüfen",
+    "checkingForUpdates": "Prüfe…",
+    "upToDate": "✓ Aktuell",
+    "updateError": "Fehler",
+    "pinProtection": "PIN Schutz",
+    "pinActive": "aktiv",
+    "pinInactive": "inaktiv",
+    "pinChange": "Ändern",
+    "pinSet": "Setzen",
+    "pinOldLabel": "Alter PIN",
+    "pinNewLabel": "Neuer PIN (6 Ziffern)",
+    "pinConfirmLabel": "PIN bestätigen",
+    "pinErrorLength": "PINs müssen 6 Ziffern sein und übereinstimmen",
+    "pinErrorOldRequired": "Alter PIN erforderlich",
+    "pinErrorOldWrong": "Alter PIN ist falsch",
+    "pinSaved": "PIN gespeichert!",
+    "pinSave": "Speichern",
+    "pinCancel": "Abbrechen"
   },
   "activity": {
     "title": "Aktivitätsprotokoll"

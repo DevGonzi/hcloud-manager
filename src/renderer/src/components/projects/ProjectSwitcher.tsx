@@ -260,7 +260,7 @@ export function ProjectSwitcher() {
                 } as React.CSSProperties
               }
             >
-              ＋ {t('project.add')}
+              {t('project.add')}
             </button>
           </div>
         )}
