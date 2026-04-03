@@ -76,7 +76,7 @@ app.whenReady().then(() => {
 
   // Auto-Updates checken
   if (autoUpdater) {
-    autoUpdater.checkForUpdatesAndNotify()
+    autoUpdater.checkForUpdates()
   }
 
   app.on('activate', () => {

@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow, app } from 'electron'
+import { ipcMain, BrowserWindow, app, dialog } from 'electron'
 import type { ProjectStorage } from '../storage'
 import { registerStorageHandlers } from './storage'
 import { registerApiHandlers } from './api'
@@ -24,8 +24,41 @@ function registerAppHandlers() {
   ipcMain.handle('app:checkForUpdates', async (): Promise<IpcResult<void>> => {
     try {
       if (!process.env.VITE_DEV_SERVER_URL) {
-        const { autoUpdater } = require('electron-updater')
-        await autoUpdater.checkForUpdatesAndNotify()
+        try {
+          const { autoUpdater } = require('electron-updater')
+          autoUpdater.logger = console
+          const result = await autoUpdater.checkForUpdates()
+          
+          if (result?.updateInfo?.version) {
+            const currentVersion = app.getVersion()
+            if (result.updateInfo.version !== currentVersion) {
+              await dialog.showMessageBox({
+                type: 'info',
+                title: 'Update verfügbar',
+                message: `Neue Version ${result.updateInfo.version} verfügbar`,
+                detail: `Aktuell installiert: ${currentVersion}\n\nWerde nun aktualisiert...`,
+                buttons: ['OK']
+              })
+              await autoUpdater.downloadUpdate()
+              autoUpdater.quitAndInstall()
+            } else {
+              await dialog.showMessageBox({
+                type: 'info',
+                title: 'Auf aktuellem Stand',
+                message: `Sie verwenden bereits die neueste Version (${currentVersion})`
+              })
+            }
+          }
+        } catch (updateError) {
+          const errorMsg = updateError instanceof Error ? updateError.message : String(updateError)
+          await dialog.showMessageBox({
+            type: 'error',
+            title: 'Update-Fehler',
+            message: 'Konnte nicht auf Updates überprüfen',
+            detail: errorMsg
+          })
+          throw updateError
+        }
       }
       return { success: true, data: undefined }
     } catch (e) {
