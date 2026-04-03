@@ -80,8 +80,8 @@ grab the latest from [releases](https://github.com/DevGonzi/hcloud-manager/relea
 | platform | file                                   |
 | -------- | -------------------------------------- |
 | windows  | `.exe` installer                       |
-| linux    | `.AppImage`                            |
-| mac      | `.dmg` (untested, theoretically works) |
+| mac      | `.dmg`                                 |
+| linux    | `.AppImage` (untested)                 |
 
 ### build from source
 

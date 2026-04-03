@@ -90,11 +90,11 @@ mit dem referral-link kriegst du 20€ credits und ich auch was:
 
 aktuellste version in den [releases](https://github.com/DevGonzi/hcloud-manager/releases).
 
-| plattform | datei                                     |
-| --------- | ----------------------------------------- |
-| windows   | `.exe` installer                          |
-| linux     | `.AppImage`                               |
-| mac       | `.dmg` (ungetestet, sollte funktionieren) |
+| plattform | datei                  |
+| --------- | ---------------------- |
+| windows   | `.exe` installer       |
+| mac       | `.dmg`                 |
+| linux     | `.AppImage` (ungetestet) |
 
 ### selbst bauen
 
