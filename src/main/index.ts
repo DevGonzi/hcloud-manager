@@ -3,6 +3,9 @@ import path from 'path'
 import { ProjectStorage } from './storage'
 import { registerAllHandlers } from './ipc'
 
+// Windows notification title / taskbar grouping
+app.setAppUserModelId('dev.gonzi.hcloud-manager')
+
 let storage: ProjectStorage | null = null
 export let mainWindow: BrowserWindow | null = null
 
@@ -72,7 +75,18 @@ app.whenReady().then(() => {
   setImmediate(() => {
     try {
       const { autoUpdater } = require('electron-updater')
+      autoUpdater.autoDownload = true
+      autoUpdater.autoInstallOnAppQuit = true
       autoUpdater.forceDevUpdateConfig = !!process.env.DEV_UPDATE_CHECK
+
+      let updateReady = false
+      autoUpdater.on('update-downloaded', () => { updateReady = true })
+
+      // Sicherstellen dass der Install wirklich passiert beim Beenden
+      app.on('before-quit', () => {
+        if (updateReady) autoUpdater.quitAndInstall(false, true)
+      })
+
       autoUpdater.checkForUpdatesAndNotify()
     } catch {
       // electron-updater not available in dev without config
